@@ -4,14 +4,11 @@ class Position(object):
         self.Y = y
         self.Z = z        
     def ändereX(self,inkrement):
-        self.X = self.X + inkrement
-        self.drucke()
+        self.X = self.X + inkrement       
     def ändereY(self,inkrement):
-        self.Y = self.Y + inkrement
-        self.drucke()
+        self.Y = self.Y + inkrement        
     def ändereZ(self,inkrement):
-        self.Z = self.Z + inkrement
-        self.drucke()
+        self.Z = self.Z + inkrement        
     def getX(self):
         return self.X
     def getY(self):
@@ -19,7 +16,7 @@ class Position(object):
     def getZ(self):
         return self.Z
     def drucke(self):
-        print("du befindest dich and der Position " + str(self.getX()) + "." + str(self.getY()) + "." + str(self.getZ()))
+        print("Du befindest dich an der Position " + str(self.getX()) + "." + str(self.getY()) + "." + str(self.getZ()))
 
 def vergleichePositionen(userposition,vergleichsposition, offset):
     if (userposition.getX() == vergleichsposition.getX()  and userposition.getY() == vergleichsposition.getY() ):
@@ -55,56 +52,48 @@ def vergleichePositionen(userposition,vergleichsposition, offset):
  
 def richtungsabhängigkeit (eingabe, verb, position, geschwindigkeit, grenze):   
     if "nord" in eingabe and verb != "steigst":
-        print("du " + verb +" weiter nach Norden.")
+        print("Du " + verb +" weiter nach Norden.")
         position.ändereY(geschwindigkeit)
     
     elif "ost" in eingabe  and verb != "steigst":
-        print("du " + verb +" nach Osten")
+        print("Du " + verb +" nach Osten")
         position.ändereX(geschwindigkeit)     
     elif "süd" in eingabe and verb != "steigst":
-        print("du " + verb +" nach Süden")
+        print("Du " + verb +" nach Süden")
         position.ändereY(-geschwindigkeit)
      
     elif "west" in eingabe and verb != "steigst":
         position.ändereX(-geschwindigkeit)
-        print("du " + verb +" nach Westen.") 
+        print("Du " + verb +" nach Westen.") 
     elif "hoch" in eingabe or "oben" in eingabe:
         if verb =="schwimmst" and position.getZ() ==grenze:
-            print("du kannst hier nicht nach oben!")
+            print("Du kannst hier nicht nach oben!")
         elif  (verb == "gehst" or verb == "rennst"):
-            print("du kannst nicht nach oben gehen!")
+            print("Du kannst nicht nach oben gehen!")
         elif  (verb =="steigst"):    
-            print("du steigst die Treppe nach oben.")        
+            print("Du steigst die Treppe nach oben.")        
             position.ändereZ(geschwindigkeit)
-               
-            if "nord-west" in eingabe:
+
+            if "nord" in eingabe :     
                 position.ändereY(geschwindigkeit)
+            elif "ost" in eingabe :
+                position.ändereX(geschwindigkeit)     
+            elif "süd" in eingabe :
+                position.ändereY(-geschwindigkeit) 
+            elif "west" in eingabe :
                 position.ändereX(-geschwindigkeit)
-            elif "nord-ost" in eingabe:
-                position.ändereY(geschwindigkeit)
-                position.ändereX(geschwindigkeit)                 
-            elif "süd-west" in eingabe:
-                position.ändereY(-geschwindigkeit)
-                position.ändereX(-geschwindigkeit)                   
-            elif "süd-ost" in eingabe:
-                
-                position.ändereY(-geschwindigkeit)
-                position.ändereX(geschwindigkeit)
-
-          
-
         else:
-            print("du " + verb +" nach oben.")
+            print("Du " + verb +" nach oben.")
             position.ändereZ(geschwindigkeit())
             
     elif "runter" in eingabe or "unten" in eingabe: 
         if verb =="schwimmst":
-            print("du kannst hier nicht nach unten!")
+            print("Du kannst hier nicht nach unten!")
         elif  verb == "gehst" or verb == "rennst" :
-            print("du kannst nicht nach oben unten!")
+            print("Du kannst nicht nach oben unten!")
         elif verb =="steigst":  
             
-            print("du " + verb +" die Treppe nach unten.")  
+            print("Du " + verb +" die Treppe nach unten.")  
             position.ändereZ(geschwindigkeit)
                 
             if "nord-west" in eingabe:
@@ -120,7 +109,7 @@ def richtungsabhängigkeit (eingabe, verb, position, geschwindigkeit, grenze):
                 position.ändereY(-geschwindigkeit)
                 position.ändereX(geschwindigkeit)  
         else:
-            print("du " + verb +" nach unten.") 
+            print("Du " + verb +" nach unten.") 
             position.ändereZ(geschwindigkeit())
           
     ##else :   
@@ -138,7 +127,7 @@ def hauptprogramm():
     intro_text = "================= Dr. WonderDiana ====================="
     print(intro_text)
 
-    beginning_text = "Du bist Doktorandin zu Beginn kannst du eine Doktorarbeit schreiben und in alle Himmelsrichtungen (Nord,Ost,Süd,West) gehen oder rennen. du musst erst weitere Fähigkeiten erlernen, bevor du diese anwenden kannst. bitte gebe ´GEHE´ und die Richtung ein, um zu gehen und ´RENNE´  und die Richtung ein um zu rennen." 
+    beginning_text = "Du bist Doktorandin zu Beginn kannst Du eine Doktorarbeit schreiben und in alle Himmelsrichtungen (Nord,Ost,Süd,West) gehen oder rennen. Du musst erst weitere Fähigkeiten erlernen, bevor Du diese anwenden kannst. bitte gebe ´GEHE´ und die Richtung ein, um zu gehen und ´RENNE´  und die Richtung ein um zu rennen. mit ´wo bin ich?` erhälst Du Deine Position." 
     print(beginning_text)
 
     position = Position(0,0,0)
@@ -174,11 +163,11 @@ def hauptprogramm():
                 hoehe = grenzPositionWasserWald.getZ()
 
             if "genau" in positionsVergleich:
-                print("du stehst vor einem großen See. wenn du willst, kannst du jetzt ins wasser springen und danach schwimmen.")
+                print("Du stehst vor einem großen See. wenn Du willst, kannst Du jetzt ins wasser springen und danach schwimmen.")
             else :
                 print("Du siehst in der Nähe einen großen See.")                
                 richtungsabhängigkeit(letzeUsereingabe,"gehst", position,geschwindigkeit,hoehe)
-                print("wenn du willst, kannst du jetzt ins wasser springen und danach schwimmen.")
+                print("wenn Du willst, kannst Du jetzt ins wasser springen und danach schwimmen.")
 
             usereingabe = (input("> ").casefold()) ##casefold: in Kleinbuchstaben, ß in ss, umlaute bleiben
             if "springe" in usereingabe:                             
@@ -192,33 +181,33 @@ def hauptprogramm():
                     richtungsabhängigkeit(usereingabe,"fliegst",position, 8,0)
                     offset=0
                 else:
-                    print("du kannst nicht fiegen!")
+                    print("Du kannst nicht fiegen!")
             elif "gehe" in usereingabe and umgebung =="start":
                 if "nord" in positionsVergleich and "nord" in usereingabe   :
-                    print("du kannst nicht nach Norden, da hier der See ist")
+                    print("Du kannst nicht nach Norden, da hier der See ist")
                 elif "ost" in positionsVergleich and "ost" in usereingabe:
-                    print("du kannst nicht nach Osten, da hier der See ist")
+                    print("Du kannst nicht nach Osten, da hier der See ist")
                 elif "süd" in positionsVergleich and "süd" in usereingabe:
-                    print("du kannst nicht nach Süden, da hier der See ist")
+                    print("Du kannst nicht nach Süden, da hier der See ist")
                 elif "west" in positionsVergleich and "west" in usereingabe:
-                    print("du kannst nicht nach Westen, da hier der See ist")
+                    print("Du kannst nicht nach Westen, da hier der See ist")
                 else:  richtungsabhängigkeit(usereingabe,"gehst", position,2,startPosition.getZ())
 
                 offset = 0
             elif "gehe" in usereingabe and umgebung =="wald": ## achtung, richtungen müssen geswitcht werden, da vergleicher von start aus schaut
                 if "süd" in positionsVergleich and "nord" in usereingabe   :
-                    print("du kannst nicht nach Norden, da hier der See ist")
+                    print("Du kannst nicht nach Norden, da hier der See ist")
                 elif "west" in positionsVergleich and "ost" in usereingabe:
-                    print("du kannst nicht nach Osten, da hier der See ist")
+                    print("Du kannst nicht nach Osten, da hier der See ist")
                 elif "nord" in positionsVergleich and "süd" in usereingabe:
-                    print("du kannst nicht nach Süden, da hier der See ist")
+                    print("Du kannst nicht nach Süden, da hier der See ist")
                 elif "ost" in positionsVergleich and "west" in usereingabe:
-                    print("du kannst nicht nach Westen, da hier der See ist")
+                    print("Du kannst nicht nach Westen, da hier der See ist")
                 else:  richtungsabhängigkeit(usereingabe,"gehst", position,2,startPosition.getZ())
 
                 offset = 0
             elif "renne" in usereingabe:
-                print("so nah am see solltest du nicht rennen!")
+                print("so nah am see solltest Du nicht rennen!")
             elif "schwimme" in usereingabe:
                 print("Du kannst NUR im Wasser schwimmen!") 
             else: 
@@ -249,7 +238,7 @@ def hauptprogramm():
             usereingabe = (input("> ").casefold()) ##casefold: in Kleinbuchstaben, ß in ss, umlaute bleiben
                       
             if "springe" in usereingabe:
-                print("du springst voller Kraft aus dem See" ) 
+                print("Du springst voller Kraft aus dem See" ) 
                 umgebung = ziel           
                 position.ändereZ((1))
                 richtungsabhängigkeit(positionsVergleich,"gehst", position,2,hoehe)   
@@ -258,134 +247,150 @@ def hauptprogramm():
                 if kannfliegen == True:
                     richtungsabhängigkeit(usereingabe,"fliegst",position, 8,0)
                 else:
-                    print("du kannst nicht fiegen!")
+                    print("Du kannst nicht fiegen!")
                     
             elif "schwimme" in usereingabe and ziel =="wald" :
                 if "nord" in positionsVergleich and "nord" in usereingabe:
-                    print("du kannst nicht nach Norden, da hier das Ufer ist")
+                    print("Du kannst nicht nach Norden, da hier das Ufer ist")
                 elif "ost" in positionsVergleich and "ost" in usereingabe:
-                    print("du kannst nicht nach Osten, da hier das Ufere ist")
+                    print("Du kannst nicht nach Osten, da hier das Ufere ist")
                 elif "süd" in positionsVergleich and "süd" in usereingabe:
-                    print("du kannst nicht nach Süden, da hier das Ufer ist")
+                    print("Du kannst nicht nach Süden, da hier das Ufer ist")
                 elif "west" in positionsVergleich and "west" in usereingabe:
-                    print("du kannst nicht nach Westen, da hier das Ufer ist")
+                    print("Du kannst nicht nach Westen, da hier das Ufer ist")
                 else:  richtungsabhängigkeit(usereingabe,"schwimmst", position,4,grenzPositionStartWasser.getZ())
 
             elif "schwimme" in usereingabe and ziel=="start" :## achtung, richtungen müssen geswitcht werden, da vergleicher von start aus schaut
                 if "süd" in positionsVergleich and "nord" in usereingabe   :
-                    print("du kannst nicht nach Norden, da hier das Ufer ist")
+                    print("Du kannst nicht nach Norden, da hier das Ufer ist")
                 elif "west" in positionsVergleich and "ost" in usereingabe:
-                    print("du kannst nicht nach Osten, da hier das Ufere ist")
+                    print("Du kannst nicht nach Osten, da hier das Ufere ist")
                 elif "nord" in positionsVergleich and "süd" in usereingabe:
-                    print("du kannst nicht nach Süden, da hier das Ufer ist")
+                    print("Du kannst nicht nach Süden, da hier das Ufer ist")
                 elif "ost" in positionsVergleich and "west" in usereingabe:
-                    print("du kannst nicht nach Westen, da hier das Ufer ist")
+                    print("Du kannst nicht nach Westen, da hier das Ufer ist")
                 else:  richtungsabhängigkeit(usereingabe,"schwimmst", position,4,grenzPositionStartWasser.getZ())
 
             elif "gehe" in usereingabe:
-                print("du kannst im Wasser nicht gehen")
+                print("Du kannst im Wasser nicht gehen")
 
             elif "renne" in usereingabe:
-                print("du kannst im Wasser nicht rennen")
+                print("Du kannst im Wasser nicht rennen")
 
             else:
-                "eingabe nicht erkannt! du springst aus dem Wasser"
+                "eingabe nicht erkannt! Du springst aus dem Wasser"
                 umgebung = "start"            
                 position.ändereZ((1))
                 richtungsabhängigkeit(usereingabe,"gehst", position,2,grenzPositionStartWasser.getZ())   
 
         elif umgebung == "wald" and "genau" in positionsVergleichWaldZuTreppe:
-            print("du stehst genau vor der Treppe zur Uni. Du kammst diese nun hochsteigen (und sobald du auch nur einen Schritt oben bist wieder runtersteigen)")
+            print("Du stehst genau vor der Treppe zur Uni. Du kammst diese nun hochsteigen (und sobald Du auch nur einen Schritt oben bist wieder runtersteigen)")
             usereingabe = input("> ").casefold()
-            offset =0       
+            offset = 0       
 
-            if position.getX() <=0 and position.getY() <=0:    
+            if "nord" in letzeUsereingabe:
                 if "steige hoch" in usereingabe:
-                    richtungsabhängigkeit(usereingabe + " nord-west","steigst",position, 1,grenzPositionWaldTreppe.getZ)
-                    umgebung = "treppe"            
-                elif "nord" in usereingabe or "west" in usereingabe:
-                    print("du kannst nicht in diese Richtung, das hier die Treppe ist")
-            elif position.getX() >=0 and position.getY() <=0:    
+                    richtungsabhängigkeit(usereingabe + " nord","steigst",position, 1,grenzPositionWaldTreppe.getZ)
+                    umgebung = "treppe"
+                elif "nord" in usereingabe:
+                     print("Du kannst nicht nach Norden da hier die Treppe ist")
+                else:
+                    richtungsabhängigkeit(usereingabe,"gehst",position, 1,grenzPositionWasserWald.getZ)
+            elif "ost" in letzeUsereingabe:
                 if "steige hoch" in usereingabe:
-                    richtungsabhängigkeit(usereingabe + " nord-ost","steigst",position, 1,grenzPositionWaldTreppe.getZ)
-                    umgebung = "treppe" 
-                elif "nord" in usereingabe or "ost" in usereingabe:
-                    print("du kannst nicht in diese Richtung, das hier die Treppe ist")
-            elif position.getX() <=0 and position.getY() >=0:    
+                     richtungsabhängigkeit(usereingabe + " ost","steigst",position, 1,grenzPositionWaldTreppe.getZ)
+                     umgebung = "treppe"
+                elif "ost" in usereingabe:
+                     print("Du kannst nicht nach Osten da hier die Treppe ist")
+                else:
+                    richtungsabhängigkeit(usereingabe,"gehst",position, 1,grenzPositionWasserWald.getZ)
+            elif "süd" in letzeUsereingabe:
                 if "steige hoch" in usereingabe:
-                    richtungsabhängigkeit(usereingabe + " süd-west","steigst",position, 1,grenzPositionWaldTreppe.getZ)
-                    umgebung = "treppe"            
-                elif "süd" in usereingabe or "west" in usereingabe:
-                    print("du kannst nicht in diese Richtung, das hier die Treppe ist")    
-            elif position.getX() >=0 and position.getY() >=0:    
+                     richtungsabhängigkeit(usereingabe + " süd","steigst",position, 1,grenzPositionWaldTreppe.getZ)
+                     umgebung = "treppe"
+                elif "süd" in usereingabe:
+                     print("Du kannst nicht nach Süden, da hier die Treppe ist")
+                else:
+                    richtungsabhängigkeit(usereingabe,"gehst",position, 1,grenzPositionWasserWald.getZ)
+            elif "west" in letzeUsereingabe:
                 if "steige hoch" in usereingabe:
-                    richtungsabhängigkeit(usereingabe + " süd-ost","steigst",position, 1,grenzPositionWaldTreppe.getZ)
-                    umgebung = "treppe"            
-                elif "süd" in usereingabe or "ost" in usereingabe:
-                    print("du kannst nicht in diese Richtung, das hier die Treppe ist")
+                     richtungsabhängigkeit(usereingabe + " west","steigst",position, 1,grenzPositionWaldTreppe.getZ)
+                     umgebung = "treppe"
+                elif "west" in usereingabe:
+                     print("Du kannst nicht nach Westen, da hier die Treppe ist")
+                else:
+                    richtungsabhängigkeit(usereingabe,"gehst",position, 1,grenzPositionWasserWald.getZ)
+
             
         elif umgebung == "treppe" and ("genau" in positionsVergleichWaldZuTreppe or "offset" in positionsVergleichWaldZuTreppe):
             
-            print("du stehst wieder unten an der der Treppe zur Uni. Du kammst diese nun hochstreigen (und sobald du auch nur einen Schritt oben bist wieder runtersteigen)")
+            print("Du stehst wieder unten an der der Treppe zur Uni. Du kammst diese nun hochstreigen (und sobald Du auch nur einen Schritt oben bist wieder runtersteigen)")
             usereingabe = input("> ").casefold()
             offset =0       
-
-            if position.getX() <=0 and position.getY() <=0:    
-                if "steige hoch" in usereingabe:
-                    richtungsabhängigkeit(usereingabe + " nord-west","steigst",position, 1,grenzPositionWaldTreppe.getZ)
-                    umgebung = "treppe"            
-                elif "nord" in usereingabe or "west" in usereingabe:
-                    print("du kannst nicht in diese Richtung, das hier die Treppe ist")
-            elif position.getX() >=0 and position.getY() <=0:    
-                if "steige hoch" in usereingabe:
-                    richtungsabhängigkeit(usereingabe + " nord-ost","steigst",position, 1,grenzPositionWaldTreppe.getZ)
-                    umgebung = "treppe" 
-                elif "nord" in usereingabe or "ost" in usereingabe:
-                    print("du kannst nicht in diese Richtung, das hier die Treppe ist")
-            elif position.getX() <=0 and position.getY() >=0:    
-                if "steige hoch" in usereingabe:
-                    richtungsabhängigkeit(usereingabe + " süd-west","steigst",position, 1,grenzPositionWaldTreppe.getZ)
-                    umgebung = "treppe"            
-                elif "süd" in usereingabe or "west" in usereingabe:
-                    print("du kannst nicht in diese Richtung, das hier die Treppe ist")    
-            elif position.getX() >=0 and position.getY() >=0:    
-                if "steige hoch" in usereingabe:
-                    richtungsabhängigkeit(usereingabe + " süd-ost","steigst",position, 1,grenzPositionWaldTreppe.getZ)
-                    umgebung = "treppe"            
-                elif "süd" in usereingabe or "ost" in usereingabe:
-                    print("du kannst nicht in diese Richtung, das hier die Treppe ist")
-            elif (doktormutterPosition == startPosition and "genau" in vergleichePositionen(position, grenzPositiondoktormutter, offset) or 
-                doktormutterPosition != startPosition and "genau" in position == doktormutterPosition):
-                  
-                doktormutterPosition = Position
-                print("vor dir steht Deine Doktormutter.")
             
-                if Inventar.__contains__("Doktorarbeit"):
-                    print("Sie bedankt sich für die Doktorarbeit und überreicht dir eine dose Red Bull.")
-                    Inventar.remove ("Doktorarbeit")
-                    Inventar.append("RedBull")
-                else :
-                    print("sie bittet Dich um den finalen Stand Deiner Doktorarbeit")
+            if "nord" in letzeUsereingabe:
+                if "steige hoch" in usereingabe:
+                     richtungsabhängigkeit(usereingabe + " nord","steigst",position, 1,grenzPositionWaldTreppe.getZ)
+                elif "nord" in usereingabe:
+                     print("Du kannst nicht nach Norden da hier die Treppe ist")
+                else:
+                    richtungsabhängigkeit(usereingabe,"gehst",position, 1,grenzPositionWasserWald.getZ)
+            elif "ost" in letzeUsereingabe:
+                if "steige hoch" in usereingabe:
+                     richtungsabhängigkeit(usereingabe + " ost","steigst",position, 1,grenzPositionWaldTreppe.getZ)
+                elif "ost" in usereingabe:
+                     print("Du kannst nicht nach Osten da hier die Treppe ist")
+                else:
+                    richtungsabhängigkeit(usereingabe,"gehst",position, 1,grenzPositionWasserWald.getZ)
+            elif "süd" in letzeUsereingabe:
+                if "steige hoch" in usereingabe:
+                     richtungsabhängigkeit(usereingabe + " süd","steigst",position, 1,grenzPositionWaldTreppe.getZ)
+                elif "süd" in usereingabe:
+                     print("Du kannst nicht nach Süden, da hier die Treppe ist")
+                else:
+                    richtungsabhängigkeit(usereingabe,"gehst",position, 1,grenzPositionWasserWald.getZ)
+            elif "west" in letzeUsereingabe:
+                if "steige hoch" in usereingabe:
+                     richtungsabhängigkeit(usereingabe + " west","steigst",position, 1,grenzPositionWaldTreppe.getZ)
+                elif "west" in usereingabe:
+                     print("Du kannst nicht nach Westen, da hier die Treppe ist")
+                else:
+                    richtungsabhängigkeit(usereingabe,"gehst",position, 1,grenzPositionWasserWald.getZ)
+
+        elif (doktormutterPosition == startPosition and "genau" in vergleichePositionen(position, grenzPositiondoktormutter, offset) or 
+            doktormutterPosition != startPosition and position == doktormutterPosition):
+                  
+            doktormutterPosition = Position
+            print("vor dir steht Deine Doktormutter.")
+            
+            if Inventar.__contains__("Doktorarbeit"):
+                print("Sie bedankt sich für die Doktorarbeit und überreicht dir eine dose Red Bull.")
+                Inventar.remove ("Doktorarbeit")
+                Inventar.append("RedBull")
+            else :
+                print("sie bittet Dich um den finalen Stand Deiner Doktorarbeit")
               
         else:
             usereingabe = input("> ").casefold()
             if "doktorarbeit" in usereingabe:
-                print("du schreibst deine Doktorarbeit und hast diese nun im Inventar")
+                usereingabe = letzeUsereingabe
+                print("Du schreibst deine Doktorarbeit und hast diese nun im Inventar")
                 Inventar.append("Doktorarbeit")
             elif "trinke" in usereingabe :
+                usereingabe = letzeUsereingabe
                 if Inventar.__contains__("RedBull"):
-                    print("du trinkst die Red Bull.Nun kannst du fliegen!")                    
+                    print("Du trinkst die Red Bull.Nun kannst Du fliegen!")                    
                     kannfliegen == True
                 else :
-                    print("du hast nichts zum Trinken im Inventar!")
+                    print("Du hast nichts zum Trinken im Inventar!")
 
             elif "gehe" in usereingabe:
                 if umgebung == "start":
                     richtungsabhängigkeit(usereingabe,"gehst", position,2,startPosition.getZ())
-                    offset =0
+                    offset =2
                 elif umgebung =="wald":
                     richtungsabhängigkeit(usereingabe,"gehst", position,1,grenzPositionWasserWald.getZ())
-                    offset =0
+                    offset =2
                 elif umgebung =="wasser":
                     print("Du kannst im Wasser nicht gehen!")
             elif "renne" in usereingabe:
@@ -412,26 +417,30 @@ def hauptprogramm():
                 if umgebung =="treppe":
                     if "hoch" in usereingabe:
                         grenze = grenzPositionWaldTreppe.getZ()
-                        richtung = 1
+                      
                     elif "runter" in usereingabe:
-                        grenze = grenzPositionWasserWald.getZ()
-                        richtung = -1
-                    if position.getX() <=0 and position.getY() <=0:    
-                        richtungsabhängigkeit(usereingabe + " nord-west","steigst",position, richtung,grenze)
-                    elif position.getX() >=0 and position.getY() <=0:    
-                        richtungsabhängigkeit(usereingabe + " nord-ost","steigst",position, richtung,grenze)
-                    elif position.getX() <=0 and position.getY() >=0:    
-                        richtungsabhängigkeit(usereingabe + " süd-west","steigst",position, richtung,grenze)
-                    elif position.getX() >=0 and position.getY() >=0:    
-                        richtungsabhängigkeit(usereingabe + " süd-ost","steigst",position, richtung,grenze)
+                        grenze = grenzPositionWasserWald.getZ()                       
+                        
+                    if "nord" in letzeUsereingabe:                        
+                        usereingabe = usereingabe + " nord"      
+                    elif "ost" in letzeUsereingabe:               
+                       usereingabe = usereingabe + " ost"                   
+                    elif "süd" in letzeUsereingabe:
+                      usereingabe = usereingabe + " süd"
+                    elif "west" in letzeUsereingabe:
+                       usereingabe = usereingabe + "west"
+
+                    richtungsabhängigkeit(usereingabe,"steigst",position, 1,grenze)   
 
             elif "fliege" in usereingabe:
                 if kannfliegen == True:
                     richtungsabhängigkeit(usereingabe,"fliegst",position, 4,0)
                 else :
-                    print("du kannst nicht fiegen!")
+                    print("Du kannst nicht fiegen!")
             elif "wo bin ich?" in usereingabe:
-                position.drucke()
+                usereingabe = letzeUsereingabe
+                position.drucke() 
+                print(umgebung)
             else:
                 print("Befehl nicht erkannt")
     
