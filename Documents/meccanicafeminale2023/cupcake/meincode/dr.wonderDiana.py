@@ -1,3 +1,6 @@
+
+
+
 class Position(object):
     def __init__(self,x,y,z):
         self.X = x
@@ -16,7 +19,7 @@ class Position(object):
     def getZ(self):
         return self.Z
     def drucke(self):
-        print("Du befindest dich an der Position " + str(self.getX()) + "." + str(self.getY()) + "." + str(self.getZ()))
+        print("Du befindest dich an der Position " + str(self.gebeX()) + "." + str(self.gebeY()) + "." + str(self.gebeZ()))
 
 def vergleichePositionen(userposition,vergleichsposition, offset):
     if (userposition.getX() == vergleichsposition.getX()  and userposition.getY() == vergleichsposition.getY() ):
@@ -87,7 +90,7 @@ def richtungsabhängigkeit (eingabe, verb, position, geschwindigkeit, grenze):
             position.ändereZ(geschwindigkeit())
             
     elif "runter" in eingabe or "unten" in eingabe: 
-        if verb =="schwimmst":
+        if verb =="schwimmst" and position.getZ() == grenze:
             print("Du kannst hier nicht nach unten!")
         elif  verb == "gehst" or verb == "rennst" :
             print("Du kannst nicht nach oben unten!")
@@ -322,9 +325,10 @@ def hauptprogramm():
                     richtungsabhängigkeit(usereingabe,"gehst",position, 1,grenzPositionWasserWald.getZ)
 
             
-        elif umgebung == "treppe" and ("genau" in positionsVergleichWaldZuTreppe or "offset" in positionsVergleichWaldZuTreppe):
+        elif umgebung == "treppe" and "genau" in positionsVergleichWaldZuTreppe:
             
             print("Du stehst wieder unten an der der Treppe zur Uni. Du kammst diese nun hochstreigen (und sobald Du auch nur einen Schritt oben bist wieder runtersteigen)")
+            umgebung = "wald"
             usereingabe = input("> ").casefold()
             offset =0       
             
@@ -380,7 +384,7 @@ def hauptprogramm():
                 usereingabe = letzeUsereingabe
                 if Inventar.__contains__("RedBull"):
                     print("Du trinkst die Red Bull.Nun kannst Du fliegen!")                    
-                    kannfliegen == True
+                    kannfliegen = True
                 else :
                     print("Du hast nichts zum Trinken im Inventar!")
 
