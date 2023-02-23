@@ -19,7 +19,7 @@ class Position(object):
     def getZ(self):
         return self.Z
     def drucke(self):
-        print("Du befindest dich an der Position " + str(self.gebeX()) + "." + str(self.gebeY()) + "." + str(self.gebeZ()))
+        print("Du befindest dich an der Position " + str(self.getX()) + "." + str(self.getY()) + "." + str(self.getZ()))
 
 def vergleichePositionen(userposition,vergleichsposition, offset):
     if (userposition.getX() == vergleichsposition.getX()  and userposition.getY() == vergleichsposition.getY() ):
