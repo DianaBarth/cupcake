@@ -441,7 +441,7 @@ def hauptprogramm():
                     richtungsabhängigkeit(usereingabe,"fliegst",position, 4,0)
                 else :
                     print("Du kannst nicht fiegen!")
-            elif "wo bin ich?" in usereingabe:
+            elif "wo bin ich" in usereingabe:
                 usereingabe = letzeUsereingabe
                 position.drucke() 
                 print(umgebung)
