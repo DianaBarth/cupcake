@@ -1,3 +1,5 @@
+import random
+
 class Position(object):
     def __init__(self,x,y,z):
         self.X = x
@@ -18,24 +20,39 @@ class Position(object):
     def drucke(self):
         print("Du befindest dich an der Position " + str(self.gebeX()) + "." + str(self.gebeY()) + "." + str(self.gebeZ()))
 
+class Verb(object):
+    def __init__(self, bezeichung)
+        self.bezeichung = bezeichnung
+        self.variante = {} ## Dictionary aus Arrays. Key= mögliche Eingabe, Value= mehrere mögliche Ausgaben
+    
+    def fuegeVarianteHinzu(eingabe, ausgabe)        
+        self.variante[eingabe].append(ausgabe)
+
+    def gebeEineAusgabeZurEingabe (eingabe):
+        if eingabe in self.variante.keys:
+            return random.choice(self.variante[eingabe])
+
+    def gebeAllemoeglichenEingaben():
+        return self.variante.keys  
+
 class Umgebung(object):
     
-    def __init__(self, bezeichung, endBegrenzung, wechselVerb):
+    def __init__(self, bezeichung, endbegrenzung, wechselVerb):
         self.bezeichung =bezeichung
         self.geschwindigkeiten = {}
         self.verbtypen = {}
-        self.endBegrenzung = endBegrenzung
+        self.endbegrenzung = endbegrenzung
         self.offset = 0
         self.naechsteUmgebung = None
         self.wechselVerb = wechselVerb
 
-    def setzeNaechsteUmgebung(self,naechsteUmgebung)    
+    def setzeNaechsteUmgebung(self,naechsteUmgebung) :
         self.naechsteUmgebung = naechsteUmgebung
     
-    def setzeOffset(self, offset)
+    def setzeOffset(self, offset):
         self.offset = offset
     
-    def setzeGeschwindigkeit(self, verb, wert, typ)
+    def setzeGeschwindigkeit(self, verb, wert, typ):
         self.geschwindigkeiten[verb] = wert          
         self.verbtypen[verb] = typ
 
@@ -52,48 +69,48 @@ class Umgebung(object):
         return self.geschwindigkeiten.keys()
 
     def gebeWechselverb(self):
-        retrun self.wechselVerb
+        return self.wechselVerb
 
     def testeEndBegrenzung(self, userposition):
-        if (userposition.gebeX() == endbegrenzung.gebeX()  and userposition.gebeY() == endbegrenzung.gebeY() ):
+        if (userposition.gebeX() == self.endbegrenzung.gebeX()  and userposition.gebeY() == self.endbegrenzung.gebeY() ):
             return "genau nord-west oben" ## ecke
-        elif (userposition.gebeX() == endbegrenzung.gebeX() - self.offset and userposition.gebeY() == endbegrenzung.gebeY() - self.offset):
+        elif (userposition.gebeX() == self.endbegrenzung.gebeX() - self.offset and userposition.gebeY() == self.endbegrenzung.gebeY() - self.offset):
             return "offset nord-west oben" ## ecke
-        elif (userposition.gebeX() == endbegrenzung.gebeX() and userposition.gebeY() == - endbegrenzung.gebeY()):
+        elif (userposition.gebeX() == self.endbegrenzung.gebeX() and userposition.gebeY() == - self.endbegrenzung.gebeY()):
             return "genau süd-west" ## ecke
-        elif (userposition.gebeX() == endbegrenzung.gebeX() - self.offset and userposition.gebeY() == - endbegrenzung.gebeY() + self.offset):
+        elif (userposition.gebeX() == self.endbegrenzung.gebeX() - self.offset and userposition.gebeY() == - self.endbegrenzung.gebeY() + self.offset):
             return "offset süd-west" ## ecke
-        elif (userposition.gebeX() == - endbegrenzung.gebeX() and userposition.gebeY() == - endbegrenzung.gebeY()):
+        elif (userposition.gebeX() == - self.endbegrenzung.gebeX() and userposition.gebeY() == - self.endbegrenzung.gebeY()):
             return "genau süd-ost" ## ecke
-        elif (userposition.gebeX() == - endbegrenzung.gebeX() + self.offset and userposition.gebeY() == - (endbegrenzung.gebeY()) + self.offset):
+        elif (userposition.gebeX() == - self.endbegrenzung.gebeX() + self.offset and userposition.gebeY() == - (self.endbegrenzung.gebeY()) + self.offset):
             return "offset süd-ost" ## ecke
-        elif userposition.gebeX() == endbegrenzung.gebeX():
+        elif userposition.gebeX() == self.endbegrenzung.gebeX():
             return "genau ost"
-        elif userposition.gebeX() == endbegrenzung.gebeX() - self.offset:
+        elif userposition.gebeX() == self.endbegrenzung.gebeX() - self.offset:
             return "offset ost"
-        elif userposition.gebeX() == - endbegrenzung.gebeX():
+        elif userposition.gebeX() == - self.endbegrenzung.gebeX():
             return "genau west"
-        elif userposition.gebeX() == - endbegrenzung.gebeX() + self.offset:
+        elif userposition.gebeX() == - self.endbegrenzung.gebeX() + self.offset:
             return "offset west"
-        elif userposition.gebeY() == endbegrenzung.gebeY():
+        elif userposition.gebeY() == self.endbegrenzung.gebeY():
             return "genau nord"
-        elif userposition.gebeY() == endbegrenzung.gebeY() - self.offset:
+        elif userposition.gebeY() == self.endbegrenzung.gebeY() - self.offset:
             return "offset nord"
-        elif userposition.gebeY() == - endbegrenzung.gebeY():
+        elif userposition.gebeY() == - self.endbegrenzung.gebeY():
             return "genau süd"
-        elif userposition.gebeY() == - endbegrenzung.gebeY() + self.offset:
+        elif userposition.gebeY() == - self.endbegrenzung.gebeY() + self.offset:
             return "offset süd"     
         else:
             return "kleineres" 
-  
-  class Bewegung(object):
+
+class Bewegung(object):
     def __init__(self, startPosition, startUmgebung):
           self.text = ""
           self.richtungstext =""  
           self.position = startPosition
           self.umgebung = startUmgebung
           self.kannfliegen = False
-          self.eingabe = "start
+          self.eingabe = "start"
 
     def druckeText(self):
          print(self.text)
@@ -104,12 +121,12 @@ class Umgebung(object):
     def bewege(self, eingabe):
         self.eingabe =  eingabe
 
-        for verb in  self.umgebung.gebeVerben()            
+        for verb in  self.umgebung.gebeVerben() :            
             if verb in self.eingabe:
                 
-               grenzTest = self.umgebung.testeEndBegrenzung(self.position) 
+                grenzTest = self.umgebung.testeEndBegrenzung(self.position) 
                
-               if grenzTest == "kleineres":
+                if "kleineres" in grenzTest:
 
                     anwendung = self.umgebung.gebeVerbtyp(verb)
                     if anwendung == "Fläche":
@@ -146,12 +163,12 @@ class Umgebung(object):
         self.position.ändereZ(geschwindigkeit)
         if geschwindigkeit > 0: 
             self.richtungstext = "oben"
-        else 
+        else :
             self.richtungstext = "unten" 
 
     #Bewegung allgemein
 
-    def bewegeFläche(self, verb)
+    def bewegeFläche(self, verb):
 
         geschwindigkeit = self.umgebung.gebeGeschwindigkeit(verb)
 
@@ -166,7 +183,7 @@ class Umgebung(object):
 
         self.text = "Du " + verb + " nach " + self.richtungstext
 
-    def bewegeEbene(self, verb)
+    def bewegeEbene(self, verb):
 
         geschwindigkeit = self.umgebung.gebeGeschwindigkeit(verb)
 
@@ -185,49 +202,108 @@ class Umgebung(object):
 
         self.text = "Du " + verb + " nach " + self.richtungstext
 
-def hauptProgramm
-    intro_text = "================= Dr. WonderDiana ====================="
-    print(intro_text)
 
-    beginning_text = "Du bist Doktorandin zu Beginn kannst Du eine Doktorarbeit schreiben und in alle Himmelsrichtungen (Nord,Ost,Süd,West) gehen oder rennen. Du musst erst weitere Fähigkeiten erlernen, bevor Du diese anwenden kannst. bitte gebe ´GEHE´ und die Richtung ein, um zu gehen und ´RENNE´  und die Richtung ein um zu rennen. mit ´wo bin ich?` erhälst Du Deine Position." 
-    print(beginning_text)
 
-    grenzPositionStartWasser = Position(12,12,-1)
-    grenzPositionWasserWald = Position(40,40,0)
-    grenzPositionWaldTreppe = Position (50,50,10)
-    grenzPositiondoktormutter = Position(55,55,10)
 
-    startUmgebung = Umgebung("start",grenzPositionStartWasser,  "springe") 
-    startUmgebung.setzeGeschwindigkeit("gehst",2, "Fläche")
-    startUmgebung.setzeGeschwindigkeit("rennst",4, "Fläche")
-    startUmgebung.setzeOffset(2)
-  
-    wasserUmgebung = Umgebung("wasser",grenzPositionWasserWald, "springe") 
-    wassertUmgebung.setzeGeschwindigkeit("schwimmst",4, "Ebene")
+class Spiel
+    def __init__
+        __initialisiereVerben()
+        __initialisierePositionen()
+        __initialisereUmgebungen()
+        self.bewegung = Bewegung(Position(0,0,0), self.startUmgebung)
 
-    waldUmgebung = Umgebung("wald",grenzPositionWaldTreppe, "steige") 
-    waldUmgebung.setzeGeschwindigkeit("gehst", 1, "Fläche")
-    waldUmgebung.setzeGeschwindigkeit("rennst",2 , "Fläche")
-    waldUmgebung.setzeOffset(1)
+        __initTexte()
+    def __initTexte (self):
+        intro_text = "================= Dr. WonderDiana ====================="        
 
-    treppeUmgegung = Umgenung("treppe", grenzPositiondoktormutter, "spreche")
-    treppeUmgegung.setzeGeschwindigkeit("steigst",4, "Ebene")
-
-    startUmgebung.setzeNaechsteUmgebung(wasserUmgebung)
-    wasserUmgebung.setzeNaechsteUmgebung(waldUmgebung)
-    waldUmgebung.setzeNaechsteUmgebung(treppeUmgegung)
-
-    bewegung = Bewegung(Position(0,0,0), startUmgebung)
-
-    while True:
+        beginning_text = "Du bist Doktorandin zu Beginn kannst Du eine Doktorarbeit schreiben und in alle Himmelsrichtungen (Nord,Ost,Süd,West) gehen oder rennen. Du musst erst weitere Fähigkeiten erlernen, bevor Du diese anwenden kannst. bitte gebe ´GEHE´ und die Richtung ein, um zu gehen und ´RENNE´  und die Richtung ein um zu rennen. mit ´wo bin ich?` erhälst Du Deine Position." 
         
-        usereingabe = input("> ").casefold()
-        bewegung.bewege(usereingabe)
-        bewegung.druckeText()
-        bewegung.druckePosition()
-        
-    Inventar  = []
-    
-    while True:
+    def  __initialisiereVerben(self):
+        __initialisiereGehen()
+        __initialisiereRennen
+        __initialisiereSchwimmen
 
-hauptProgramm()
+        __initialisiereForsche
+    def __initialisiereGehen(self):
+        self.VerbGehen = Verb("gehen)
+        self.VerbGehen.fuegeVarianteHinzu("geh", ["gehst", "läufst", "schlenderst", "schleichst", "flanierst" ])
+        self.VerbGehen.fuegeVarianteHinzu("lauf", ["gehst", "läufst", "marschierst"])
+        
+    def __initialisiereRennen(self):
+        self.VerbRennen = Verb("rennen)
+        self.VerbRennen.fuegeVarianteHinzu("eil", ["eilst", "hetzt", "jagest", "preschst" ])
+        self.VerbRennen.fuegeVarianteHinzu("renn", ["rennst", "joggst", "läufst schnell"])
+ 
+    def __initialisiereSchwimmen(self):
+        self.VerbSchwimmen = Verb("schwimmen)
+        self.VerbSchwimmen.fuegeVarianteHinzu("schwimm", ["schwimmst"])
+
+    def __initialisiereSteigen(self):
+        self.VerbSteigen = Verb("steigen)
+        self.VerbSteigen.fuegeVarianteHinzu("steig", ["steigst", "erklimmst"])
+
+    def __initialisiereSpringen(self):
+        self.VerbSpringen = Verb("springen)
+        self.VerbSpringen.fuegeVarianteHinzu("spring", ["springst", "hüpst"])
+
+    def __initialisiereForsche(self):
+        self.VerbForschen = Verb("forschen")
+        self.VerbForschen.fuegeVarianteHinzu("forsch", ["forschst", "analysierst", "untersuchst"])
+        self.VerbForschen.fuegeVarianteHinzu("analysiere", ["forschst", "analysierst", "untersuchst"])
+        self.VerbForschen.fuegeVarianteHinzu("untersuch", ["forschst", "analysierst", "untersuchst"])
+ 
+    def __initialisiereForsche(self):
+        self.VerbForschen = Verb("sprechen")
+        self.VerbForschen.fuegeVarianteHinzu("sprech", ["sprichst", "redest"])
+        self.VerbForschen.fuegeVarianteHinzu("red", ["sprichst", "redest"])
+
+    def __initialisierePositionen(self):
+        self.grenzPositionStartWasser = Position(12,12,-1)
+        self.grenzPositionWasserWald = Position(40,40,0)
+        self.grenzPositionWaldTreppe = Position (50,50,10)
+        self.grenzPositiondoktormutter = Position(55,55,10)
+
+    def __initialisereUmgebungen(self):
+        initialisiereStartUmgebung()
+        initialisiereWasserUmgebung()
+        intiialiereWaldUmgebung()
+        initialisiereTreppeUmgebung()
+        
+        self.startUmgebung.setzeNaechsteUmgebung(self.wasserUmgebung)
+        self.wasserUmgebung.setzeNaechsteUmgebung(self.waldUmgebung)
+        self.waldUmgebung.setzeNaechsteUmgebung(self.treppeUmgegung)
+
+    def __initialisiereStartUmgebung(self):
+        self.startUmgebung = Umgebung("start",self.grenzPositionStartWasser,  self.VerbSpringen) 
+        self.startUmgebung.setzeGeschwindigkeit( self.VerbGehen",2, "Fläche")
+        self.startUmgebung.setzeGeschwindigkeit(self.VerbRennen,4, "Fläche")
+        self.startUmgebung.setzeOffset(2)
+
+    def initialisiereWasserUmgebung(self):
+        self.wasserUmgebung = Umgebung("wasser",grenzPositionWasserWald,  self.VerbSpringen) 
+        self.wasserUmgebung.setzeGeschwindigkeit(self.VerbSchwimmen,4, "Ebene")
+
+    def intiialiereWaldUmgebung(self):
+        self.waldUmgebung = Umgebung("wald",grenzPositionWaldTreppe, self.VerbSteigen) 
+        self.waldUmgebung.setzeGeschwindigkeit( self.VerbGehen, 1, "Fläche")
+        self.waldUmgebung.setzeGeschwindigkeit(self.VerbRennen,2 , "Fläche")
+        self.waldUmgebung.setzeOffset(1)
+
+    def initialisiereTreppeUmgebung(self):
+        self.treppeUmgegung = Umgebung("treppe", self.grenzPositiondoktormutter, "sprech")
+        self.treppeUmgegung.setzeGeschwindigkeit("steig",4, "Ebene")
+
+
+
+    ##   Inventar  = []
+
+    def spiele()
+        while True:
+            
+            usereingabe = input("> ").casefold()
+            bewegung.bewege(usereingabe)
+            bewegung.druckeText()
+            bewegung.druckePosition()
+
+meinspiel = Spiel()
+meinspiel.spiele
