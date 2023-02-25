@@ -21,18 +21,21 @@ class Position(object):
         print("Du befindest dich an der Position " + str(self.gebeX()) + "." + str(self.gebeY()) + "." + str(self.gebeZ()))
 
 class Verb(object):
-    def __init__(self, bezeichung)
+    def __init__(self, bezeichung):
         self.bezeichung = bezeichnung
         self.variante = {} ## Dictionary aus Arrays. Key= mögliche Eingabe, Value= mehrere mögliche Ausgaben
-    
-    def fuegeVarianteHinzu(eingabe, ausgabe)        
+        
+    def gebeBezeichnung(self):
+        self.bezeichnung
+
+    def fuegeVarianteHinzu(eingabe, ausgabe):       
         self.variante[eingabe].append(ausgabe)
 
     def gebeEineAusgabeZurEingabe (eingabe):
         if eingabe in self.variante.keys:
             return random.choice(self.variante[eingabe])
 
-    def gebeAllemoeglichenEingaben():
+    def gebeAlleMoeglichenEingaben():
         return self.variante.keys  
 
 class Umgebung(object):
@@ -121,24 +124,27 @@ class Bewegung(object):
     def bewege(self, eingabe):
         self.eingabe =  eingabe
 
-        for verb in  self.umgebung.gebeVerben() :            
-            if verb in self.eingabe:
-                
-                grenzTest = self.umgebung.testeEndBegrenzung(self.position) 
-               
-                if "kleineres" in grenzTest:
+        for verb in  self.umgebung.gebeVerben() :    
 
-                    anwendung = self.umgebung.gebeVerbtyp(verb)
-                    if anwendung == "Fläche":
-                        self.bewegeFläche(verb)
-                    elif anwendung =="Ebene":
-                        self.bewegeEbene(verb)
-
-                elif "genau" in grenzTest :
-                        self.text = "Du stehst genau an einer Grenze."
+            for verbVariation in verb.gebeAlleMoeglichenEingaben():     
+                   
+                if verbVariation in self.eingabe:
+                    
+                    grenzTest = self.umgebung.testeEndBegrenzung(self.position) 
                 
-                elif "offset" in grenzTest:
-                    self.text = "du stehst kurz vor einer Grenze"
+                    if "kleineres" in grenzTest:
+
+                        anwendung = self.umgebung.gebeVerbtyp(verb)
+                        if anwendung == "Fläche":
+                            self.bewegeFläche(verb.gebeEineAusgabeZurEingabe(verbVariation))
+                        elif anwendung =="Ebene":
+                            self.bewegeEbene(verb.gebeEineAusgabeZurEingabe(verbVariation))
+
+                    elif "genau" in grenzTest:
+                            self.text = "Du stehst genau an einer Grenze."
+                    
+                    elif "offset" in grenzTest:
+                        self.text = "du stehst kurz vor einer Grenze"
 
 
     #Himmelsrichtungen
@@ -205,8 +211,8 @@ class Bewegung(object):
 
 
 
-class Spiel
-    def __init__
+class Spiel(object):
+    def __init__(self):
         __initialisiereVerben()
         __initialisierePositionen()
         __initialisereUmgebungen()
@@ -222,28 +228,30 @@ class Spiel
         __initialisiereGehen()
         __initialisiereRennen
         __initialisiereSchwimmen
-
+        __initialisiereSteigen
+        __initialisiereSpringen
         __initialisiereForsche
+
     def __initialisiereGehen(self):
-        self.VerbGehen = Verb("gehen)
+        self.VerbGehen = Verb("gehen")
         self.VerbGehen.fuegeVarianteHinzu("geh", ["gehst", "läufst", "schlenderst", "schleichst", "flanierst" ])
         self.VerbGehen.fuegeVarianteHinzu("lauf", ["gehst", "läufst", "marschierst"])
         
     def __initialisiereRennen(self):
-        self.VerbRennen = Verb("rennen)
+        self.VerbRennen = Verb("rennen")
         self.VerbRennen.fuegeVarianteHinzu("eil", ["eilst", "hetzt", "jagest", "preschst" ])
         self.VerbRennen.fuegeVarianteHinzu("renn", ["rennst", "joggst", "läufst schnell"])
  
     def __initialisiereSchwimmen(self):
-        self.VerbSchwimmen = Verb("schwimmen)
+        self.VerbSchwimmen = Verb("schwimmen")
         self.VerbSchwimmen.fuegeVarianteHinzu("schwimm", ["schwimmst"])
 
     def __initialisiereSteigen(self):
-        self.VerbSteigen = Verb("steigen)
+        self.VerbSteigen = Verb("steigen")
         self.VerbSteigen.fuegeVarianteHinzu("steig", ["steigst", "erklimmst"])
 
     def __initialisiereSpringen(self):
-        self.VerbSpringen = Verb("springen)
+        self.VerbSpringen = Verb("springen")
         self.VerbSpringen.fuegeVarianteHinzu("spring", ["springst", "hüpst"])
 
     def __initialisiereForsche(self):
