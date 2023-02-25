@@ -21,21 +21,22 @@ class Position(object):
         print("Du befindest dich an der Position " + str(self.gebeX()) + "." + str(self.gebeY()) + "." + str(self.gebeZ()))
 
 class Verb(object):
-    def __init__(self, bezeichung):
-        self.bezeichung = bezeichnung
-        self.variante = {} ## Dictionary aus Arrays. Key= mögliche Eingabe, Value= mehrere mögliche Ausgaben
+    def __init__(self, bezeichnung):
+        self.bezeichnung = bezeichnung
+        self.variante = {} ##key = mögliche Eingabe, Value= mehrere mögliche Ausgaben
         
     def gebeBezeichnung(self):
         self.bezeichnung
 
-    def fuegeVarianteHinzu(eingabe, ausgabe):       
-        self.variante[eingabe].append(ausgabe)
+    def fuegeVarianteHinzu(self,eingabe, ausgabe):     
+        self.variante.update({eingabe : ausgabe})
 
-    def gebeEineAusgabeZurEingabe (eingabe):
-        if eingabe in self.variante.keys:
-            return random.choice(self.variante[eingabe])
+    def gebeEineAusgabeZurEingabe (self,eingabe):
+        for kombination in self.variante.keys:
+            if eingabe in kombination:
+                return random.choice(self.variante[eingabe])
 
-    def gebeAlleMoeglichenEingaben():
+    def gebeAlleMoeglichenEingaben(self):
         return self.variante.keys  
 
 class Umgebung(object):
@@ -56,8 +57,8 @@ class Umgebung(object):
         self.offset = offset
     
     def setzeGeschwindigkeit(self, verb, wert, typ):
-        self.geschwindigkeiten[verb] = wert          
-        self.verbtypen[verb] = typ
+        self.geschwindigkeiten.update ({verb : wert } )         
+        self.verbtypen.update ({verb : typ})
 
     def gebeBezeichnung(self):
         return self.bezeichung
@@ -208,33 +209,24 @@ class Bewegung(object):
 
         self.text = "Du " + verb + " nach " + self.richtungstext
 
-
-
-
 class Spiel(object):
     def __init__(self):
-        __initialisiereVerben()
-        __initialisierePositionen()
-        __initialisereUmgebungen()
+        self.__initialisiereVerben()
+        self.__initialisierePositionen()
+        self.__initialisereUmgebungen()
         self.bewegung = Bewegung(Position(0,0,0), self.startUmgebung)
-
-        __initTexte()
-    def __initTexte (self):
-        intro_text = "================= Dr. WonderDiana ====================="        
-
-        beginning_text = "Du bist Doktorandin zu Beginn kannst Du eine Doktorarbeit schreiben und in alle Himmelsrichtungen (Nord,Ost,Süd,West) gehen oder rennen. Du musst erst weitere Fähigkeiten erlernen, bevor Du diese anwenden kannst. bitte gebe ´GEHE´ und die Richtung ein, um zu gehen und ´RENNE´  und die Richtung ein um zu rennen. mit ´wo bin ich?` erhälst Du Deine Position." 
-        
+         
     def  __initialisiereVerben(self):
-        __initialisiereGehen()
-        __initialisiereRennen
-        __initialisiereSchwimmen
-        __initialisiereSteigen
-        __initialisiereSpringen
-        __initialisiereForsche
+        self.__initialisiereGehen()
+        self.__initialisiereRennen()
+        self.__initialisiereSchwimmen()
+        self.__initialisiereSteigen()
+        self.__initialisiereSpringen()
+        self.__initialisiereForsche()
 
     def __initialisiereGehen(self):
         self.VerbGehen = Verb("gehen")
-        self.VerbGehen.fuegeVarianteHinzu("geh", ["gehst", "läufst", "schlenderst", "schleichst", "flanierst" ])
+        self.VerbGehen.fuegeVarianteHinzu("geh", ["gehst", "läufst", "schlenderst", "schleichst"])
         self.VerbGehen.fuegeVarianteHinzu("lauf", ["gehst", "läufst", "marschierst"])
         
     def __initialisiereRennen(self):
@@ -272,10 +264,10 @@ class Spiel(object):
         self.grenzPositiondoktormutter = Position(55,55,10)
 
     def __initialisereUmgebungen(self):
-        initialisiereStartUmgebung()
-        initialisiereWasserUmgebung()
-        intiialiereWaldUmgebung()
-        initialisiereTreppeUmgebung()
+        self.__initialisiereStartUmgebung()
+        self.__initialisiereWasserUmgebung()
+        self.__intiialiereWaldUmgebung()
+        self.__initialisiereTreppeUmgebung()
         
         self.startUmgebung.setzeNaechsteUmgebung(self.wasserUmgebung)
         self.wasserUmgebung.setzeNaechsteUmgebung(self.waldUmgebung)
@@ -283,35 +275,35 @@ class Spiel(object):
 
     def __initialisiereStartUmgebung(self):
         self.startUmgebung = Umgebung("start",self.grenzPositionStartWasser,  self.VerbSpringen) 
-        self.startUmgebung.setzeGeschwindigkeit( self.VerbGehen",2, "Fläche")
+        self.startUmgebung.setzeGeschwindigkeit( self.VerbGehen,2, "Fläche")
         self.startUmgebung.setzeGeschwindigkeit(self.VerbRennen,4, "Fläche")
         self.startUmgebung.setzeOffset(2)
 
-    def initialisiereWasserUmgebung(self):
-        self.wasserUmgebung = Umgebung("wasser",grenzPositionWasserWald,  self.VerbSpringen) 
+    def __initialisiereWasserUmgebung(self):
+        self.wasserUmgebung = Umgebung("wasser",self.grenzPositionWasserWald,  self.VerbSpringen) 
         self.wasserUmgebung.setzeGeschwindigkeit(self.VerbSchwimmen,4, "Ebene")
 
-    def intiialiereWaldUmgebung(self):
-        self.waldUmgebung = Umgebung("wald",grenzPositionWaldTreppe, self.VerbSteigen) 
+    def __intiialiereWaldUmgebung(self):
+        self.waldUmgebung = Umgebung("wald",self.grenzPositionWaldTreppe, self.VerbSteigen) 
         self.waldUmgebung.setzeGeschwindigkeit( self.VerbGehen, 1, "Fläche")
         self.waldUmgebung.setzeGeschwindigkeit(self.VerbRennen,2 , "Fläche")
         self.waldUmgebung.setzeOffset(1)
 
-    def initialisiereTreppeUmgebung(self):
-        self.treppeUmgegung = Umgebung("treppe", self.grenzPositiondoktormutter, "sprech")
-        self.treppeUmgegung.setzeGeschwindigkeit("steig",4, "Ebene")
-
-
+    def __initialisiereTreppeUmgebung(self):
+        self.treppeUmgegung = Umgebung("treppe", self.grenzPositiondoktormutter, self.VerbForschen)
+        self.treppeUmgegung.setzeGeschwindigkeit(self.VerbSteigen,4, "Ebene")
 
     ##   Inventar  = []
 
-    def spiele()
-        while True:
-            
+    def spiele(self):
+
+        print("=================WonderDoktor========================")
+
+        while True:            
             usereingabe = input("> ").casefold()
-            bewegung.bewege(usereingabe)
-            bewegung.druckeText()
-            bewegung.druckePosition()
+            self.bewegung.bewege(usereingabe)
+            self.bewegung.druckeText()
+            self.bewegung.druckePosition()
 
 meinspiel = Spiel()
 meinspiel.spiele
