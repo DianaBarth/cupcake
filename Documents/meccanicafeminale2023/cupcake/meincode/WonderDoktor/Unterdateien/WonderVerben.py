@@ -107,7 +107,7 @@ class VerbGeneratorEbene(object):
        
     def __initialisiereSteigen(self, verbtyp):
         self.VerbSteigen = Verb("steigen", verbtyp)
-        self.VerbSteigen.fuegeVarianteHinzu("steig", ["steigst", "erklimmst"])
+        self.VerbSteigen.fuegeVarianteHinzu("steig", ["steigst die Treppe"])
        
 class VerbGeneratorUebergang(object):
     def  __init__(self,verbtyp):

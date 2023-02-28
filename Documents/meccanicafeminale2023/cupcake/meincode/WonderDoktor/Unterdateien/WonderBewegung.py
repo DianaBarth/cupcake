@@ -1,4 +1,3 @@
-
 from Unterdateien.WonderVerben import *
 
 class Bewegung(object):
@@ -13,46 +12,133 @@ class Bewegung(object):
           self.uebergang = False
 
     def druckeText(self):
-         print(self.text)
-    
+         if self.text !="":
+             print(self.text)
+
     def druckePosition(self) :
-        self.position.drucke
+        self.position.gebePositionsAusgabe()
+    
+    def druckeAbschluss(self): 
+        print("--------------------------------------")
 
-    def bewege(self, eingabe, verb):
-        self.eingabe =  eingabe      
+    def setzeEingabe(self,eingabe):
+        self.eingabe = eingabe
 
-        EndgrenzTest = self.umgebung.testeEndBegrenzung(self.position) 
-        if "kleineres" in EndgrenzTest :
-            StartgrenzTest = self.umgebung.testeStartBegrenzung(self.position) 
-            if "kleineres" in  StartgrenzTest:
-                grenzTest = "kleineres"
-            else:
-                grenzTest = StartgrenzTest
+    def pruefeUebergang(self):
+            
+        endgrenzTest = self.umgebung.testeEndBegrenzung(self.position) 
+        startgrenzTest = self.umgebung.testeStartBegrenzung(self.position) 
+
+        if "kleineres" in endgrenzTest and "kleineres" in startgrenzTest:
+            self.uebergangstyp = "beides kleiner"
+            self.grenzTest = "kleineres"
+            return False
+        elif "kleineres" not in endgrenzTest and "ende" in self.umgebung.gebeUebergangstypen():
+            self.uebergangstyp = "ende"
+            self.grenzTest = endgrenzTest
+            return True
+        elif "kleineres" not in startgrenzTest and "start" in self.umgebung.gebeUebergangstypen():
+            self.uebergangstyp = "start"
+            self.grenzTest = startgrenzTest
+            return True
         else:
-            grenzTest = EndgrenzTest
+            self.uebergangstyp ="grenze nicht vorhanden"
+            self.grenzTest = "kleineres"
+            return False
 
-        if  self.uebergang == False:    
-            if "kleineres" in grenzTest:
+    def praktiziereUebergang(self, benutzereingabe, benutzerverb, vergleichsergebnis, uebergangstyp):
+        
+        uebergangsVerb = self.umgebung.gebeUebergangsVerb(uebergangstyp)
+        
+        if uebergangsVerb.gebeBezeichnung() ==  benutzerverb.gebeBezeichnung():  
+            self.umgebung.setzeGeschwindigkeitenFuerUebergang(uebergangstyp)
+      
+            anschlussVerb = self.umgebung.gebeAnschlussVerb(uebergangstyp)
 
-                if verb.gebeVerbtyp() == VerbTyp.Flaeche:
-                    self.bewegeFläche(verb)               
-                    self.text = self.text +" \n" + self.position.gebePositionsAusgabe()
+            if "offset" in vergleichsergebnis:
+                offsetVerb = self.umgebung.gebeOffsetVerb(uebergangstyp)   
 
-                elif self.umgebung.gebeUmgebungsTyp == VerbTyp.Ebene:
-                    self.bewegeEbene((verb))             
-                    self.text = self.text +" \n" + self.position.gebePositionsAusgabe()
-
+                self.setzeEingabe(offsetVerb.gebeBezeichnung() + " " + vergleichsergebnis)
+                self.bewegeEbene(offsetVerb)
+                self.druckeText()
+                self.setzeEingabe(uebergangsVerb.gebeBezeichnung() + " " + vergleichsergebnis)             
+                self.bewegeUebergang(uebergangsVerb)
+                self.druckeText()      
+                self.setzeEingabe(anschlussVerb.gebeBezeichnung() + " " + vergleichsergebnis)             
+                self.bewegeEbene(anschlussVerb)
+                self.druckeText()
+                
             else:
-                self.umgebung.gebeUebergangssatz(grenzTest)
+                self.setzeEingabe(uebergangsVerb.gebeBezeichnung() + " " + vergleichsergebnis)             
+                self.bewegeUebergang(uebergangsVerb)
+                self.druckeText()
+                self.setzeEingabe(anschlussVerb.gebeBezeichnung() + " " + vergleichsergebnis)                          
+                self.bewegeEbene(anschlussVerb)
+                self.druckeText()
+              
+                self.umgebung.entferneGeschwindigkeitenFuerUebergang(uebergangstyp)
+
+            return True 
+        else:
+            if "nord" in vergleichsergebnis and "nord" in benutzereingabe   :
+                print("Du kannst nicht nach Norden " + benutzerverb.gebeBezeichnung() + ".")
+                print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
+            elif "ost" in vergleichsergebnis and "ost" in benutzereingabe:
+                print("Du kannst nicht nach Osten " + benutzerverb.gebeBezeichnung() + ".")
+                print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
+            elif "süd" in vergleichsergebnis and "süd" in benutzereingabe:
+                print("Du kannst nicht nach Süden " + benutzerverb.gebeBezeichnung() + ".")
+                print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
+            elif "west" in vergleichsergebnis and "west" in benutzereingabe:
+                print("Du kannst nicht nach Westen " + benutzerverb.gebeBezeichnung() + ".")
+                print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
+            else:  
+                 self.bewegeEbene(benutzerverb)
+
+            return False  
+
+    def bewege(self, eingabe, bewegungsverb):
+        self.eingabe =  eingabe
+
+        self.uebergang = self.pruefeUebergang()
+       
+        if  self.uebergang == False:    
+            verb = self.umgebung.vergleicheVerben(eingabe)
+            if verb is None:
+                self.text = "Achtung,in diesem Gebiet (" + str(self.umgebung.gebeBezeichnung())+ ") kann man nicht " + bewegungsverb.gebeBezeichnung() + "."
+                
+                if "kleineres" not in self.grenzTest:
+                    self.text = self.text +" \n" + self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp)                  
+                    self.uebergang = True
+
+            elif "kleineres" in self.grenzTest:
+                # Bewegung durchführen
+                if verb.gebeVerbtyp() == VerbTyp.Flaeche:
+                    self.bewegeFläche(verb)             
+                   
+                elif  verb.gebeVerbtyp() == VerbTyp.Ebene:
+                    self.bewegeEbene((verb))           
+                   
+                ##erneut prüfen, um wenn man jetzt an der Grenze ist Übergangssatz anzuzeigen
+                self.uebergang = self.pruefeUebergang()
+                if "kleineres" not in self.grenzTest:
+                    self.text = self.text +" \n" + self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp)                  
+                    self.uebergang = True
+            else:
+                ##Übergangsatz anzeigen
+                self.text = self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp)
                 self.uebergang = True
 
-        elif self.uebergang == True:
-            if self.pruefeUebergang(eingabe,verb,grenzTest) == True:
-                naechsteUmgebung = self.umgebung.gebeNaechsteUmgebung()
-                naechsteUmgebung.setzeBewegung = self
-                self.umgebung = naechsteUmgebung
+             ##Position am Ende angeben
+            self.text = self.text +" \n" + self.position.gebePositionsAusgabe()
 
-
+        elif self.uebergang == True:         
+            if self.praktiziereUebergang(eingabe,bewegungsverb,self.grenzTest, self.uebergangstyp) == True:
+                ##Übergang durchführen
+             
+                self.umgebung = self.umgebung.gebeNaechsteUmgebung(self, self.uebergangstyp)
+            
+            self.text = self.position.gebePositionsAusgabe()
             self.uebergang = False
             
 
@@ -127,6 +213,6 @@ class Bewegung(object):
         else:
             self.hoehe(geschwindigkeit)
 
-        self.text = "Du " + verb.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + "."
+        self.text = "Du " + str(verb.gebeEineAusgabeZurEingabe(self.eingabe)) + " nach " + self.richtungstext + "."
     
         

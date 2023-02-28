@@ -32,11 +32,14 @@ class Umgebung(object):
         self.naechsteUmgebung = None
         self.moeglicheEingaben = {}
 
+        self.ueberganstypen = []
         self.uebergangssatzGenau = {}
         self.uebergangssatzOffset = {}
+        self.uebergangsgeschwindigkeit = {}
         self.uebergangsVerb = {}
         self.offsetVerb = {}
         self.anschlussVerb = {}
+        self.anschlussgeschwindigkeit = {}
         self.naechsteUmgebung = {}
 
     def setzeBewegung(self, bewegung):
@@ -48,15 +51,41 @@ class Umgebung(object):
     
     def setzeGeschwindigkeit(self, verb, geschwindigkeit):
         self.geschwindigkeiten[verb.gebeBezeichnung()] = geschwindigkeit 
+
+    def entferneGeschwindigkeit(self,verb):
+        del self.geschwindigkeiten[verb.gebeBezeichnung()]
     
-    def setzeUebergang(self, typ, uebergangssatzGenau, uebergangssatzOffset,uebergangsVerbBezeichnung, offsetVerbBezeichung, anschlussVerbBezeichnug, naechsteUmgebung):
+    def setzeGeschwindigkeitenFuerUebergang(self, typ):
+        self.setzeGeschwindigkeit(self.uebergangsVerb[typ],  self.uebergangsgeschwindigkeit[typ])
+        self.setzeGeschwindigkeit(self.anschlussVerb[typ],  self.anschlussgeschwindigkeit[typ])
+
+    def entferneGeschwindigkeitenFuerUebergang(self, typ):
+        self.entferneGeschwindigkeit(self.uebergangsVerb[typ])
+        self.entferneGeschwindigkeit(self.anschlussVerb[typ])
+
+    def setzeUebergang(self, typ, uebergangssatzGenau, uebergangssatzOffset,uebergangsVerbBezeichnung, uebergangsgeschwindigkeit, offsetVerbBezeichung, anschlussVerbBezeichnug, anschlussgeschwindigkeit, naechsteUmgebung):
+        self.ueberganstypen.append (typ)
         self.uebergangssatzGenau[typ] = uebergangssatzGenau
         self.uebergangssatzOffset[typ] = uebergangssatzOffset
+        self.uebergangsgeschwindigkeit[typ] = uebergangsgeschwindigkeit
         self.uebergangsVerb[typ] = self.verbvergleicher.gebeVerb(uebergangsVerbBezeichnung)
         self.offsetVerb[typ] = self.verbvergleicher.gebeVerb(offsetVerbBezeichung)
         self.anschlussVerb[typ] = self.verbvergleicher.gebeVerb(anschlussVerbBezeichnug)
+        self.anschlussgeschwindigkeit[typ] = anschlussgeschwindigkeit
         self.naechsteUmgebung[typ] = naechsteUmgebung
     
+    def gebeOffsetVerb(self,typ):
+        return self.offsetVerb[typ]  
+
+    def gebeUebergangsVerb(self,typ):
+        return self.uebergangsVerb[typ]
+        
+    def gebeAnschlussVerb(self,typ):
+        return self.anschlussVerb[typ] 
+
+    def gebeUebergangstypen(self):
+        return self.ueberganstypen
+
     def gebeBezeichnung(self):      
         return self.bezeichung
     
@@ -69,52 +98,27 @@ class Umgebung(object):
     def gebeVerben(self):
         return self.geschwindigkeiten.keys()
 
-    def gebeWechselverb(self):
-        return self.wechselVerb
+    def gebeUebergangsVerb(self, uebergangstyp):
+        return self.uebergangsVerb[uebergangstyp]
     
-    def gebeUebergangssatz(self, vergleichsergebnis):
+    def gebeUebergangssatz(self, vergleichsergebnis, uebergangstyp):
         if "offset" in vergleichsergebnis:
-            print(self.uebergangssatzOffset)     
+            return (self.uebergangssatzOffset[uebergangstyp])     
         else:
-            print(self.uebergangssatzGenau)
+            return (self.uebergangssatzGenau[uebergangstyp])
     
-    def gebeNaechsteUmgebung(self):
-         return self.naechsteUmgebung 
+    def gebeNaechsteUmgebung(self, bewegung, uebergangstyp):
+         self.naechsteUmgebung[uebergangstyp].setzeBewegung(bewegung)
+         return self.naechsteUmgebung[uebergangstyp]
 
-    def pruefeUebergang(self, benutzereingabe, benutzerverb, vergleichsergebnis, uebergangstyp):
+    def vergleicheVerben(self,eingabe):
+        for umgebungsVerbBezeichnung in self.gebeVerben():
+           umgebungsverb = self.verbvergleicher.gebeVerb(umgebungsVerbBezeichnung)
+           for verb in umgebungsverb.gebeAlleMoeglichenEingaben():
+                if verb in eingabe:
+                    return umgebungsverb
+        return None
 
-        if self.uebergangsVerb[uebergangstyp].gebeBezeichung() ==  benutzerverb.gebeBezeichung():  
-            if "offset" in vergleichsergebnis:
-                self.bewegung.bewegeEbene(self.offsetVerb[uebergangstyp])
-                self.bewegung.druckeText()
-                self.bewegung.bewegeUebergang(self.uebergangsVerb[uebergangstyp])
-                self.bewegung.druckeText()             
-                self.bewegung.bewegeEbene(self.anschlussVerb[uebergangstyp])
-                self.bewegung.druckeText()
-            else:
-                self.bewegung.bewegeUebergang(self.uebergangsVerb[uebergangstyp])
-                self.bewegung.druckeText()
-                self.bewegung.bewegeEbene(self.anschlussVerb[uebergangstyp])
-                self.bewegung.druckeText()
-            return True
-        else:
-            if "nord" in vergleichsergebnis and "nord" in benutzereingabe   :
-                print("Du kannst nicht nach Norden " + self.benutzerverb.gebeBezeichnung() + ".")
-                self.gebeUebergangssatz(vergleichsergebnis)
-            elif "ost" in vergleichsergebnis and "ost" in benutzereingabe:
-                print("Du kannst nicht nach Osten " + self.benutzerverb.gebeBezeichnung() + ".")
-                self.gebeUebergangssatz(vergleichsergebnis)
-            elif "süd" in vergleichsergebnis and "süd" in benutzereingabe:
-                print("Du kannst nicht nach Süden " + self.benutzerverb.gebeBezeichnung() + ".")
-                self.gebeUebergangssatz(vergleichsergebnis)
-            elif "west" in vergleichsergebnis and "west" in benutzereingabe:
-                print("Du kannst nicht ach Westen " + self.benutzerverb.gebeBezeichnung() + ".")
-                self.gebeUebergangssatz(vergleichsergebnis)
-            else:  
-                 self.bewegung.bewegeEbene(benutzerverb)
-
-            return False
-            
     def testeEndBegrenzung(self, userposition):
         if (userposition.gebeX() == self.endbegrenzung.gebeX()  and userposition.gebeY() == self.endbegrenzung.gebeY() ):
             return "genau nord-west oben" ## ecke
@@ -192,41 +196,41 @@ class UmgebungsGenerator:
     
     
         self.startUmgebung.setzeUebergang("ende",
-            "Du stehst vor einem großen See. wenn Du willst, kannst Du jetzt ins wasser springen und danach schwimmen.",
-            "Du siehst in der Nähe einen großen See. Wenn Du willst, kannst Du jetzt ins wasser springen und danach schwimmen.", 
-            "springen","gehen","schwimmen", self.wasserUmgebung)  
+            "Du stehst vor einem großen See. wenn Du willst, kannst Du jetzt ins Wasser springen und danach schwimmen.",
+            "Du siehst in der Nähe einen großen See. Wenn Du willst, kannst Du jetzt ins Wasser springen und danach schwimmen.", 
+            "springen", -1, "gehen","schwimmen", 4, self.wasserUmgebung)  
         
         self.wasserUmgebung.setzeUebergang("start",
             "Du stößt an das Ufer zum Startgebiet an. Wenn Du willst, kannst Du jetzt aus dem Wasser springen und danach weiter gehen oder rennen",
             "Du siehst in der Nähe das Ufer zum Startgebiet. Wenn Du willst, kannst Du jetzt aus dem Wasser springen und danach weiter gehen/rennen",
-             "springen", "schwimmen",  "gehen",  self.startUmgebung)
+             "springen", 1, "schwimmen",  "gehen", 2,  self.startUmgebung)
         
         self.wasserUmgebung.setzeUebergang("ende",
             "Du stößt an das Ufer an. Dahinter siehst Du einen Wald. Wenn Du willst, kannst Du jetzt aus dem Wasser springen und danach weiter gehen oder rennen",
             "Du siehst in der Nähe das Ufer. Dahinter siehst Du einen Wald.  Wenn Du willst, kannst Du jetzt aus dem Wasser springen und danach weiter gehen/rennen",
-             "springen", "schwimmen",  "gehen",  self.waldUmgebung)
+             "springen", 1, "schwimmen",  "gehen", 1, self.waldUmgebung)
 
         self.waldUmgebung.setzeUebergang("start", "Du stehst vor einem großen See. wenn Du willst, kannst Du jetzt ins wasser springen und danach schwimmen.",
             "Du siehst in der Nähe einen großen See. Wenn Du willst, kannst Du jetzt ins wasser springen und danach schwimmen.", 
-            "springen","gehen","schwimmen", self.wasserUmgebung)  
+            "springen", -1, "gehen","schwimmen", 4, self.wasserUmgebung)  
                                          
         self.waldUmgebung.setzeUebergang("ende",
             "Du stehst direkt vor einer großen Treppe. Wenn du willst kannst du diese nun hochsteigen.",
             "Du siehst in der Nähe eine große Treppe. Wenn du willst kannst du diese nun hochsteigen.",
-             "steigen", "steigen",  "steigen",  self.waldUmgebung)                         
+             "gehen", 1, "steigen",  "steigen", 1,  self.waldUmgebung)                         
                                          
     
     def gebeStartUmgebung(self):
         return self.startUmgebung
 
     def __initialisierePositionen(self):
-        self.grenzStartPosition = Position(0,0,0)
+        self.StartPosition = Position(0,0,0)
         self.grenzPositionStartWasser = Position(12,12,-1)
         self.grenzPositionWasserWald = Position(40,40,0)
         self.grenzPositionWaldTreppe = Position (50,50,10)
   
     def __initialisiereStartUmgebung(self,verbvergleicher):
-        self.startUmgebung = Umgebung ("start",self.grenzStartPosition, self.grenzPositionStartWasser, verbvergleicher   )                                   
+        self.startUmgebung = Umgebung ("start",self.StartPosition, self.grenzPositionStartWasser, verbvergleicher  )                                   
         self.startUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("gehen"),2)
         self.startUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("rennen"),4)
         self.startUmgebung.setzeOffset(2)

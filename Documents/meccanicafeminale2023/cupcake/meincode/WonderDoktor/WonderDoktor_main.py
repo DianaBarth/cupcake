@@ -1,5 +1,5 @@
-from Unterdateien.WonderBewegung import *
 from Unterdateien.WonderVerben import *
+from Unterdateien.WonderBewegung import *
 from Unterdateien.WonderUmgebung import *
 
 class Spiel(object):
@@ -16,9 +16,12 @@ class Spiel(object):
         while True:            
             usereingabe = input("> ").casefold()
             eingegebenesVerb = self.verbvergleicher.vergleiche(usereingabe)
-            if eingegebenesVerb.verbtyp == VerbTyp.Flaeche or  eingegebenesVerb.verbtyp == VerbTyp.Ebene or  eingegebenesVerb.verbtyp == VerbTyp.Uebergang:
-                self.bewegung.bewege(usereingabe, eingegebenesVerb)
+            if eingegebenesVerb is not None:
+                if eingegebenesVerb.verbtyp == VerbTyp.Flaeche or  eingegebenesVerb.verbtyp == VerbTyp.Ebene or  eingegebenesVerb.verbtyp == VerbTyp.Uebergang:
+                    self.bewegung.bewege(usereingabe, eingegebenesVerb)
             self.bewegung.druckeText()           
+            self.bewegung.druckePosition()  
+            self.bewegung.druckeAbschluss()
 
 meinspiel = Spiel()
 meinspiel.spiele()
