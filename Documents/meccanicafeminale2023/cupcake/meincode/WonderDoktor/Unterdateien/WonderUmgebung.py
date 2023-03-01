@@ -21,11 +21,13 @@ class Position(object):
 
 class Umgebung(object):
     
-    def __init__(self, bezeichung,startbegrenzung, endbegrenzung, verbvergleicher):   
+    def __init__(self, bezeichung,  umgebungssatzFuerBlumen,startbegrenzung, endbegrenzung, verbvergleicher):   
         self.verbvergleicher = verbvergleicher
         self.bezeichung =bezeichung
+        self.umgebungssatzFuerBlumen = umgebungssatzFuerBlumen
         self.startbegrenzung = startbegrenzung
         self.endbegrenzung = endbegrenzung
+
         self.geschwindigkeiten = {}
                
         self.offset = 0
@@ -97,6 +99,9 @@ class Umgebung(object):
 
     def gebeVerben(self):
         return self.geschwindigkeiten.keys()
+    
+    def gebeUmgebungssatzFuerBlumen(self):
+        return self.umgebungssatzFuerBlumen
 
     def gebeUebergangsVerb(self, uebergangstyp):
         return self.uebergangsVerb[uebergangstyp]
@@ -225,22 +230,22 @@ class UmgebungsGenerator:
 
     def __initialisierePositionen(self):
         self.StartPosition = Position(0,0,0)
-        self.grenzPositionStartWasser = Position(12,12,-1)
+        self.grenzPositionStartWasser = Position(20,20,-1)
         self.grenzPositionWasserWald = Position(40,40,0)
-        self.grenzPositionWaldTreppe = Position (50,50,10)
+        self.grenzPositionWaldTreppe = Position (60,60,10)
   
     def __initialisiereStartUmgebung(self,verbvergleicher):
-        self.startUmgebung = Umgebung ("start",self.StartPosition, self.grenzPositionStartWasser, verbvergleicher  )                                   
+        self.startUmgebung = Umgebung ("wiese","von der Wiese", self.StartPosition, self.grenzPositionStartWasser, verbvergleicher  )                                   
         self.startUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("gehen"),2)
         self.startUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("rennen"),4)
         self.startUmgebung.setzeOffset(2)
 
     def __initialisiereWasserUmgebung(self,verbvergleicher):
-        self.wasserUmgebung = Umgebung("wasser",self.grenzPositionStartWasser, self.grenzPositionWasserWald,verbvergleicher)
+        self.wasserUmgebung = Umgebung("wasser","aus dem Wasser",self.grenzPositionStartWasser, self.grenzPositionWasserWald,verbvergleicher)
         self.wasserUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("schwimmen"),4)
 
     def __intiialiereWaldUmgebung(self,verbvergleicher):
-        self.waldUmgebung = Umgebung("wald",self.grenzPositionWasserWald,self.grenzPositionWaldTreppe,verbvergleicher)
+        self.waldUmgebung = Umgebung("wald","aus dem Wald", self.grenzPositionWasserWald,self.grenzPositionWaldTreppe,verbvergleicher)
         self.waldUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("gehen"), 1)
         self.waldUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("rennen"),2)
         self.waldUmgebung.setzeOffset(1)
