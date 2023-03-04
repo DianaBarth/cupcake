@@ -6,9 +6,9 @@ from Unterdateien.WonderUmgebung import *
 class Spiel(object):
     def __init__(self):
         self.verbvergleicher = VerbVergleicher()
-        self.Wondetext = WonderText()
+        self.Wondertext = WonderText()
         self.umgebungen = UmgebungsGenerator(self.verbvergleicher)      
-        self.bewegung = Bewegung(self.umgebungen.gebeStartUmgebung())
+        self.bewegung = Bewegung(self.umgebungen.gebeStartUmgebung(self.Wondertext))
         self.umgebungen.gebeStartUmgebung().setzeBewegung(self.bewegung)
         
     def spiele(self):
@@ -27,14 +27,14 @@ class Spiel(object):
                 if eingegebenesVerb.vertyp == VerbTyp.Blumenpflege():
                     if self.blume.pruefegepflueckt() == False:
                         if eingegebenesVerb.gebeBezeichnung() == "gießen":
-                            self.bewegung.setzeText ( self.blume.gieße())
+                            self.Wondertext.setzeText ( self.blume.gieße())
                         elif eingegebenesVerb.gebeBezeichnung() == "pflücken":
-                            self.bewegung.setzeText(self.blume.pfluecke())
+                            self.Wondertext.setzeText(self.blume.pfluecke())
 
 
-            self.bewegung.druckeText()           
-            self.bewegung.druckePosition()  
-            self.bewegung.druckeAbschluss()
+            self.Wondetext.druckeText()           
+            self.Wondetext.druckePosition()  
+            self.Wondetext.druckeAbschluss()
 
 meinspiel = Spiel()
 meinspiel.spiele()

@@ -6,7 +6,7 @@ class WonderText(object):
     def setzeText(self,text):
         self.text = text
 
-    def ergaenzeTexT(self,text):
+    def ergaenzeText(self,text):
          self.text = self.text + "\n" + text
        
     def druckeText(self):
@@ -16,4 +16,5 @@ class WonderText(object):
     def druckeAbschluss(self): 
         print("--------------------------------------")
 
-    
+    def druckeEingabeNichtErkannt(self,eingabe):
+        print("Achtung, Eingabe '" + eingabe  +  "' nicht erkannt! Bitte versuche es erneut!")

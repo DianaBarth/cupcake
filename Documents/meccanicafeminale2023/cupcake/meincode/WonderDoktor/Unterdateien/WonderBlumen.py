@@ -21,15 +21,15 @@ class WonderBlume(object):
 
     def identifiziere(self):
         return self.groessen(self.groessenzahl) + " Blume mit " + self.hauptfarbe + "-" + self.unterfarbe + " Blüten und " + self.blattform + " Blättern " +  self.umgebungssatz
-
+   
+    def pruefegepflueckt(self):
+         return self.gepflueckt
+   
     def pfluecke(self):
         self.gepflueckt = True
         self.text = "du pflueckst die " + self.identifiziere + " und hast diese nun in deinem Inventar"
         return self.text
 
-    def pruefegepflueckt(self):
-         return self.gepflueckt
-    
     def gieße(self):
         if self.groessenzahl < len(self.groessen):
             self.text = "du gießt die " + self.identifiziere + " und diese beginnt zu wachsen"

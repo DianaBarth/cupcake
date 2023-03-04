@@ -1,7 +1,8 @@
 from Unterdateien.WonderVerben import *
 
 class Bewegung(object):
-    def __init__(self, startUmgebung):
+    def __init__(self, startUmgebung, WonderText):
+          self.WonderText = WonderText
           self.text = ""
           self.richtungstext =""  
           self.umgebung = startUmgebung
@@ -12,18 +13,16 @@ class Bewegung(object):
           self.uebergang = False
 
     def druckePosition(self) :
-        self.position.gebePositionsAusgabe()    
+        return self.position.gebePositionsAusgabe()    
     
     def setzeEingabe(self,eingabe):
-
         self.eingabe = eingabe
+
     def gebeUmgebung(self):
         return self.umgebung
     
     def gebePosition(self):
         return self.position
-
-
 
     def pruefeUebergang(self):
             
@@ -61,24 +60,21 @@ class Bewegung(object):
 
                 self.setzeEingabe(offsetVerb.gebeBezeichnung() + " " + vergleichsergebnis)
                 self.bewegeEbene(offsetVerb)
-                self.druckeText()
+          
                 self.setzeEingabe(uebergangsVerb.gebeBezeichnung() + " " + vergleichsergebnis)             
                 self.bewegeUebergang(uebergangsVerb)
-                self.druckeText()      
+                 
                 self.setzeEingabe(anschlussVerb.gebeBezeichnung() + " " + vergleichsergebnis)             
                 self.bewegeEbene(anschlussVerb)
-                self.druckeText()
+                self.WonderText.druckeText()
                 
             else:
                 self.setzeEingabe(uebergangsVerb.gebeBezeichnung() + " " + vergleichsergebnis)             
-                self.bewegeUebergang(uebergangsVerb)
-                self.druckeText()
+                self.bewegeUebergang(uebergangsVerb)              
                 self.setzeEingabe(anschlussVerb.gebeBezeichnung() + " " + vergleichsergebnis)                          
-                self.bewegeEbene(anschlussVerb)
-                self.druckeText()
-              
+                self.bewegeEbene(anschlussVerb)                           
                 self.umgebung.entferneGeschwindigkeitenFuerUebergang(uebergangstyp)
-
+                self.WonderText.druckeText()
             return True 
         else:
             if "nord" in vergleichsergebnis and "nord" in benutzereingabe   :
@@ -106,10 +102,10 @@ class Bewegung(object):
         if  self.uebergang == False:    
             verb = self.umgebung.vergleicheVerben(eingabe)
             if verb is None:
-                self.text = "Achtung,in diesem Gebiet (" + str(self.umgebung.gebeBezeichnung())+ ") kann man nicht " + bewegungsverb.gebeBezeichnung() + "."
+                self.WonderText.setzeText("Achtung,in diesem Gebiet (" + str(self.umgebung.gebeBezeichnung())+ ") kann man nicht " + bewegungsverb.gebeBezeichnung() + ".")
                 
                 if "kleineres" not in self.grenzTest:
-                    self.text = self.text +" \n" + self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp)                  
+                    self.WonderText.ergaenzeText ( self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))                 
                     self.uebergang = True
 
             elif "kleineres" in self.grenzTest:
@@ -123,11 +119,11 @@ class Bewegung(object):
                 ##erneut prüfen, um wenn man jetzt an der Grenze ist Übergangssatz anzuzeigen
                 self.uebergang = self.pruefeUebergang()
                 if "kleineres" not in self.grenzTest:
-                    self.text = self.text +" \n" + self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp)                  
+                    self.WonderText.ergaenzeText ( self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))                  
                     self.uebergang = True
             else:
                 ##Übergangsatz anzeigen
-                self.text = self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp)
+                self.WonderText.setzeText(self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))
                 self.uebergang = True
 
              ##Position am Ende angeben
@@ -135,11 +131,10 @@ class Bewegung(object):
 
         elif self.uebergang == True:         
             if self.praktiziereUebergang(eingabe,bewegungsverb,self.grenzTest, self.uebergangstyp) == True:
-                ##Übergang durchführen
-             
+                ##Übergang durchführen             
                 self.umgebung = self.umgebung.gebeNaechsteUmgebung(self, self.uebergangstyp)
             
-            self.text = self.position.gebePositionsAusgabe()
+            self.WonderText.ergaenzeText (self.position.gebePositionsAusgabe())
             self.uebergang = False
             
 
@@ -182,9 +177,12 @@ class Bewegung(object):
             self.süd(geschwindigkeit)
         elif "west" in self.eingabe:
             self.west(geschwindigkeit)
-
-        self.text = "Du " + verb.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + "."
-
+        else:
+            self.Wondertext.druckeEingabeNichtErkannt()
+            return False
+        
+        self.WonderText.setzeText ("Du " + verb.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + ".")
+        return True
     def bewegeEbene(self, verb):
 
         geschwindigkeit = self.umgebung.gebeGeschwindigkeit(verb)
@@ -201,8 +199,12 @@ class Bewegung(object):
             self.hoehe(geschwindigkeit)
         elif "runter" in self.eingabe:
             self.hoehe(- geschwindigkeit)
-
-        self.text = "Du " + verb.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + "."
+        else:
+            self.Wondertext.druckeEingabeNichtErkannt()
+            return False
+                
+        self.WonderText.setzeText ("Du " + verb.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + "." )
+        return True
     
     def bewegeUebergang(self, verb):
         geschwindigkeit = self.umgebung.gebeGeschwindigkeit(verb)
@@ -214,6 +216,6 @@ class Bewegung(object):
         else:
             self.hoehe(geschwindigkeit)
 
-        self.text = "Du " + str(verb.gebeEineAusgabeZurEingabe(self.eingabe)) + " nach " + self.richtungstext + "."
+        self.WonderText.setzeText ("Du " + str(verb.gebeEineAusgabeZurEingabe(self.eingabe)) + " nach " + self.richtungstext + ".")
     
         

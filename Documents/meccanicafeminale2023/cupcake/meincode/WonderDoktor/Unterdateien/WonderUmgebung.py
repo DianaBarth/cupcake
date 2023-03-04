@@ -22,7 +22,8 @@ class Position(object):
 
 class Umgebung(object):
     
-    def __init__(self, bezeichung,  startbegrenzung, endbegrenzung, verbvergleicher, blumenhoehe, umgebungssatzFuerBlumen):   
+    def __init__(self, bezeichung,umgebungssatzFuerBlumen,  startbegrenzung, endbegrenzung, verbvergleicher, blumenhoehe):  
+
         self.verbvergleicher = verbvergleicher
         self.bezeichung =bezeichung
         self.umgebungssatzFuerBlumen = umgebungssatzFuerBlumen
@@ -200,9 +201,8 @@ class Umgebung(object):
 class UmgebungsGenerator:
     def __init__(self, verbvergleicher):
         self.verbvergleicher = verbvergleicher
-
+   
         self.__initialisierePositionen()
-
         self.__initialisiereStartUmgebung(verbvergleicher)
         self.__initialisiereWasserUmgebung(verbvergleicher)
         self.__intiialiereWaldUmgebung(verbvergleicher)
@@ -244,7 +244,7 @@ class UmgebungsGenerator:
         self.grenzPositionWaldTreppe = Position (60,60,10)
   
     def __initialisiereStartUmgebung(self,verbvergleicher):
-        self.startUmgebung = Umgebung ("wiese","von der Wiese", self.StartPosition, self.grenzPositionStartWasser, verbvergleicher  )                                   
+        self.startUmgebung = Umgebung ("wiese","von der Wiese", self.StartPosition, self.grenzPositionStartWasser, verbvergleicher, 1 )                                   
         self.startUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("gehen"),2)
         self.startUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("rennen"),4)
         self.startUmgebung.setzeOffset(2)
