@@ -6,7 +6,7 @@ class VerbTyp(Enum):
     Ebene = 2
     Uebergang = 3
     Interaktion = 4
-
+    Blumenpflege = 5
 
 class Verb(object):
     def __init__(self, bezeichnung, verbtyp):
@@ -61,13 +61,15 @@ class VerbGeneratoren(object):
        self.ebenenVerben = VerbGeneratorEbene(VerbTyp.Ebene)
        self.uebergangVerben = VerbGeneratorUebergang(VerbTyp.Uebergang)
        self.interaktionsVerben = VerbGeneratorInteraktion(VerbTyp.Interaktion)
-
+       self.blumenpflegeVerben = VerbGeneratorBlumenpflege(VerbTyp.Blumenpflege)
+    
     def gebeGeneratoren(self):
        yield self.flaechenVerben
        yield self.ebenenVerben
-       yield self.uebergangVerben
+       yield self.uebergangVerben    
        yield self.interaktionsVerben
-       
+       yield self.blumenpflegeVerben
+
 class VerbGeneratorFlaeche(object):
     def  __init__(self,verbtyp):
       self.__initialisiereGehen(verbtyp)
@@ -122,21 +124,36 @@ class VerbGeneratorUebergang(object):
       
 class VerbGeneratorInteraktion(object):
     def  __init__(self,verbtyp):
-        self.__initialisiereForsche(verbtyp)
+       # self.__initialisiereForsche(verbtyp)
         self.__initialisiereSprechen (verbtyp)
     
     def gebeVerben(self):
         return [self.VerbForschen, self.VerbSprechen]
 
-    def __initialisiereForsche(self, verbtyp):
-        self.VerbForschen = Verb("forschen", verbtyp)
-        self.VerbForschen.fuegeVarianteHinzu("forsch", ["forschst", "analysierst", "untersuchst"])
-        self.VerbForschen.fuegeVarianteHinzu("analysiere", ["forschst", "analysierst", "untersuchst"])
-        self.VerbForschen.fuegeVarianteHinzu("untersuch", ["forschst", "analysierst", "untersuchst"])
+   # def __initialisiereForsche(self, verbtyp):
+   #     self.VerbForschen = Verb("forschen", verbtyp)
+   #     self.VerbForschen.fuegeVarianteHinzu("forsch", ["forschst", "analysierst", "untersuchst"])
+   #    self.VerbForschen.fuegeVarianteHinzu("analysiere", ["forschst", "analysierst", "untersuchst"])
+   #    self.VerbForschen.fuegeVarianteHinzu("untersuch", ["forschst", "analysierst", "untersuchst"])
       
 
     def __initialisiereSprechen(self, verbtyp):
         self.VerbSprechen = Verb("sprechen", verbtyp)
         self.VerbSprechen.fuegeVarianteHinzu("sprech", ["sprichst", "redest"])
         self.VerbSprechen.fuegeVarianteHinzu("red", ["sprichst", "redest"])
+             
+class VerbGeneratorBlumenpflege(object):
+    def  __init__(self,verbtyp):   
+        self.__initialisiereGieße (verbtyp)
+        self.__initialisierePfluecke(verbtyp)
        
+    def gebeVerben(self):
+        return [self.VerbForschen, self.VerbSprechen]
+    
+    def __initialisiereGieße(self, verbtyp):
+        self.VerbGießen = Verb("gießen", verbtyp)
+        self.VerbGießen.fuegeVarianteHinzu("gieß", ["gießt", "bewässerst" "versorgst"])
+    
+    def __initialisierePfluecke(self, verbtyp):
+        self.VerbPfluecken = Verb("pflücken", verbtyp)
+        self.VerbPfluecken.fuegeVarianteHinzu("pflücke", ["pflückst", "entwendest", "entreisst"])

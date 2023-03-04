@@ -11,18 +11,19 @@ class Bewegung(object):
           self.eingabe = "start"
           self.uebergang = False
 
-    def druckeText(self):
-         if self.text !="":
-             print(self.text)
-
     def druckePosition(self) :
-        self.position.gebePositionsAusgabe()
+        self.position.gebePositionsAusgabe()    
     
-    def druckeAbschluss(self): 
-        print("--------------------------------------")
-
     def setzeEingabe(self,eingabe):
+
         self.eingabe = eingabe
+    def gebeUmgebung(self):
+        return self.umgebung
+    
+    def gebePosition(self):
+        return self.position
+
+
 
     def pruefeUebergang(self):
             

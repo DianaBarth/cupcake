@@ -1,3 +1,4 @@
+from WonderBlumen import *
 
 class Position(object):
     def __init__(self,x,y,z):
@@ -21,7 +22,7 @@ class Position(object):
 
 class Umgebung(object):
     
-    def __init__(self, bezeichung,  umgebungssatzFuerBlumen,startbegrenzung, endbegrenzung, verbvergleicher):   
+    def __init__(self, bezeichung,  startbegrenzung, endbegrenzung, verbvergleicher, blumenhoehe, umgebungssatzFuerBlumen):   
         self.verbvergleicher = verbvergleicher
         self.bezeichung =bezeichung
         self.umgebungssatzFuerBlumen = umgebungssatzFuerBlumen
@@ -43,6 +44,11 @@ class Umgebung(object):
         self.anschlussVerb = {}
         self.anschlussgeschwindigkeit = {}
         self.naechsteUmgebung = {}
+
+        self.BlumenSpawner = BlumenSpawner(self, blumenhoehe)
+
+    def gebeBlume(self, position):
+       return self.BlumenSpawner.gebeBlumeAnPosition(position)
 
     def setzeBewegung(self, bewegung):
         self.bewegung = bewegung
@@ -96,7 +102,10 @@ class Umgebung(object):
     
     def gebeStartBegrenzung(self):
         return self.startbegrenzung
-
+    
+    def gebeEndbegrenzung(self):
+        return self.endbegrenzung
+    
     def gebeVerben(self):
         return self.geschwindigkeiten.keys()
     
