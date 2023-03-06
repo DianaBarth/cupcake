@@ -1,7 +1,5 @@
 import random
-
-from WonderUmgebung import Position, Umgebung
-
+from . import *
 class WonderBlume(object):
    
     def __init__(self, position, umgebung):
