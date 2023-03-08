@@ -1,28 +1,10 @@
-from . import *
-
-class Position(object):
-    def __init__(self,x,y,z):
-        self.X = x
-        self.Y = y
-        self.Z = z        
-    def ändereX(self,inkrement):
-        self.X = self.X + inkrement       
-    def ändereY(self,inkrement):
-        self.Y = self.Y + inkrement        
-    def ändereZ(self,inkrement):
-        self.Z = self.Z + inkrement        
-    def gebeX(self):
-        return self.X
-    def gebeY(self):
-        return self.Y
-    def gebeZ(self):
-        return self.Z
-    def gebePositionsAusgabe(self):
-        return ("Du befindest dich an der Position " + str(self.gebeX()) + "." + str(self.gebeY()) + "." + str(self.gebeZ())) + "."
+from WonderBlumen import *
+from WonderPosition import Position
+from WonderVerben import VerbVergleicher
 
 class Umgebung(object):
     
-    def __init__(self, bezeichung,umgebungssatzFuerBlumen,  startbegrenzung, endbegrenzung, verbvergleicher, blumenhoehe):  
+    def __init__(self, bezeichung,umgebungssatzFuerBlumen, startbegrenzung:Position, endbegrenzung:Position, verbvergleicher:VerbVergleicher, blumenhoehe):  
 
         self.verbvergleicher = verbvergleicher
         self.bezeichung =bezeichung
@@ -46,10 +28,11 @@ class Umgebung(object):
         self.anschlussgeschwindigkeit = {}
         self.naechsteUmgebung = {}
 
-        self.BlumenSpawner = BlumenSpawner(self, blumenhoehe)
+        self.blumenSpawner = BlumenSpawner(self.startbegrenzung, self.endbegrenzung,blumenhoehe, self.umgebungssatzFuerBlumen)
 
-    def gebeBlume(self, position):
-       return self.BlumenSpawner.gebeBlumeAnPosition(position)
+    def gebeBlume(self, position:Position)->WonderBlume:
+        meineBlume = self.blumenSpawner.gebeBlumeAnPosition(position)
+        return meineBlume
 
     def setzeBewegung(self, bewegung):
         self.bewegung = bewegung
@@ -250,11 +233,11 @@ class UmgebungsGenerator:
         self.startUmgebung.setzeOffset(2)
 
     def __initialisiereWasserUmgebung(self,verbvergleicher):
-        self.wasserUmgebung = Umgebung("wasser","aus dem Wasser",self.grenzPositionStartWasser, self.grenzPositionWasserWald,verbvergleicher)
+        self.wasserUmgebung = Umgebung("wasser","aus dem Wasser",self.grenzPositionStartWasser, self.grenzPositionWasserWald,verbvergleicher,-5)
         self.wasserUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("schwimmen"),4)
 
     def __intiialiereWaldUmgebung(self,verbvergleicher):
-        self.waldUmgebung = Umgebung("wald","aus dem Wald", self.grenzPositionWasserWald,self.grenzPositionWaldTreppe,verbvergleicher)
+        self.waldUmgebung = Umgebung("wald","aus dem Wald", self.grenzPositionWasserWald,self.grenzPositionWaldTreppe,verbvergleicher,1)
         self.waldUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("gehen"), 1)
         self.waldUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("rennen"),2)
         self.waldUmgebung.setzeOffset(1)

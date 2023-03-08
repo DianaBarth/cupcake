@@ -1,8 +1,9 @@
-from Unterdateien.WonderVerben import *
+from WonderVerben import *
+from WonderTexte import *
 
 class Bewegung(object):
-    def __init__(self, startUmgebung, WonderText):
-          self.WonderText = WonderText
+    def __init__(self, startUmgebung, wonderText:WonderText):
+          self.wonderText = wonderText
           self.text = ""
           self.richtungstext =""  
           self.umgebung = startUmgebung
@@ -65,16 +66,13 @@ class Bewegung(object):
                 self.bewegeUebergang(uebergangsVerb)
                  
                 self.setzeEingabe(anschlussVerb.gebeBezeichnung() + " " + vergleichsergebnis)             
-                self.bewegeEbene(anschlussVerb)
-                self.WonderText.druckeText()
-                
+                self.bewegeEbene(anschlussVerb)                        
             else:
                 self.setzeEingabe(uebergangsVerb.gebeBezeichnung() + " " + vergleichsergebnis)             
                 self.bewegeUebergang(uebergangsVerb)              
                 self.setzeEingabe(anschlussVerb.gebeBezeichnung() + " " + vergleichsergebnis)                          
                 self.bewegeEbene(anschlussVerb)                           
-                self.umgebung.entferneGeschwindigkeitenFuerUebergang(uebergangstyp)
-                self.WonderText.druckeText()
+                self.umgebung.entferneGeschwindigkeitenFuerUebergang(uebergangstyp)            
             return True 
         else:
             if "nord" in vergleichsergebnis and "nord" in benutzereingabe   :
@@ -96,16 +94,16 @@ class Bewegung(object):
 
     def bewege(self, eingabe, bewegungsverb):
         self.eingabe =  eingabe
-
+        
         self.uebergang = self.pruefeUebergang()
-       
+        self.wonderText.setzeText("")
         if  self.uebergang == False:    
             verb = self.umgebung.vergleicheVerben(eingabe)
             if verb is None:
-                self.WonderText.setzeText("Achtung,in diesem Gebiet (" + str(self.umgebung.gebeBezeichnung())+ ") kann man nicht " + bewegungsverb.gebeBezeichnung() + ".")
+                self.wonderText.ergaenzeText("Achtung,in diesem Gebiet (" + str(self.umgebung.gebeBezeichnung())+ ") kann man nicht " + bewegungsverb.gebeBezeichnung() + ".")
                 
                 if "kleineres" not in self.grenzTest:
-                    self.WonderText.ergaenzeText ( self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))                 
+                    self.wonderText.ergaenzeText ( self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))                 
                     self.uebergang = True
 
             elif "kleineres" in self.grenzTest:
@@ -119,22 +117,22 @@ class Bewegung(object):
                 ##erneut prüfen, um wenn man jetzt an der Grenze ist Übergangssatz anzuzeigen
                 self.uebergang = self.pruefeUebergang()
                 if "kleineres" not in self.grenzTest:
-                    self.WonderText.ergaenzeText ( self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))                  
+                    self.wonderText.ergaenzeText ( self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))                  
                     self.uebergang = True
             else:
                 ##Übergangsatz anzeigen
-                self.WonderText.setzeText(self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))
+                self.wonderText.setzeText(self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))
                 self.uebergang = True
 
              ##Position am Ende angeben
-            self.text = self.text +" \n" + self.position.gebePositionsAusgabe()
+            self.wonderText.ergaenzeText(self.position.gebePositionsAusgabe())
 
         elif self.uebergang == True:         
             if self.praktiziereUebergang(eingabe,bewegungsverb,self.grenzTest, self.uebergangstyp) == True:
                 ##Übergang durchführen             
                 self.umgebung = self.umgebung.gebeNaechsteUmgebung(self, self.uebergangstyp)
             
-            self.WonderText.ergaenzeText (self.position.gebePositionsAusgabe())
+            self.wonderText.ergaenzeText (self.position.gebePositionsAusgabe())
             self.uebergang = False
             
 
@@ -181,7 +179,7 @@ class Bewegung(object):
             self.Wondertext.druckeEingabeNichtErkannt()
             return False
         
-        self.WonderText.setzeText ("Du " + verb.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + ".")
+        self.wonderText.ergaenzeText ("Du " + verb.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + ".")
         return True
     def bewegeEbene(self, verb):
 
@@ -203,7 +201,7 @@ class Bewegung(object):
             self.Wondertext.druckeEingabeNichtErkannt()
             return False
                 
-        self.WonderText.setzeText ("Du " + verb.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + "." )
+        self.wonderText.ergaenzeText ("Du " + verb.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + "." )
         return True
     
     def bewegeUebergang(self, verb):
@@ -216,6 +214,6 @@ class Bewegung(object):
         else:
             self.hoehe(geschwindigkeit)
 
-        self.WonderText.setzeText ("Du " + str(verb.gebeEineAusgabeZurEingabe(self.eingabe)) + " nach " + self.richtungstext + ".")
+        self.wonderText.ergaenzeText ("Du " + str(verb.gebeEineAusgabeZurEingabe(self.eingabe)) + " nach " + self.richtungstext + ".")
     
         
