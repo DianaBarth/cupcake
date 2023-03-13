@@ -15,7 +15,6 @@ class WonderText(object):
     
     def druckeAbschluss(self): 
         print("--------------------------------------")
-        self.text =""
 
     def druckeEingabeNichtErkannt(self,eingabe):
         print("Achtung, Eingabe '" + eingabe  +  "' nicht erkannt! Bitte versuche es erneut!")

@@ -1,47 +1,61 @@
 #!/usr/bin/env python3
 
 from WonderPosition import *
-from WonderVerben import *
+from WonderWoerter import *
 from WonderBlumen import *
 from WonderUmgebung import *
 from WonderBewegung import *
 from WonderTexte import *
-
+from WonderInventar import *
 
 
 class Spiel(object):
     def __init__(self):
-        self.verbvergleicher = VerbVergleicher()
+        self.wortVergleicher = WortVergleicher()
         self.wondertext = WonderText()
-        self.umgebungen = UmgebungsGenerator(self.verbvergleicher)      
+        self.wonderInventar = WonderInventar()
+        self.umgebungen = UmgebungsGenerator(self.wortVergleicher)      
         self.bewegung = Bewegung(self.umgebungen.gebeStartUmgebung(),self.wondertext)
         self.umgebungen.gebeStartUmgebung().setzeBewegung(self.bewegung)
-        
+        self.DoktormutterPosition = self.umgebung.gebeDoktormutterPosition()
+  
+
     def spiele(self):
 
-        print("=================WonderDoktor========================")
+        self.wondertext.setzeText("=================WonderDoktorandin========================")
+        self.wondertext.ergaenzeText("Du bist eine Doktorandin der Biologie. Deine Aufgabe ist es, 10 rießige Pflanzen zu finden und dann zu deiner Doktormutter zu bringen.")
+        self.wondertext.druckeText()           
+        self.wondertext.druckeAbschluss()
+
 
         while True:            
             usereingabe = input("> ").casefold()
-            eingegebenesVerb = self.verbvergleicher.vergleiche(usereingabe)
-            if eingegebenesVerb is not None:
-                if eingegebenesVerb.verbtyp == VerbTyp.Flaeche or  eingegebenesVerb.verbtyp == VerbTyp.Ebene or  eingegebenesVerb.verbtyp == VerbTyp.Uebergang:
-                    self.bewegung.bewege(usereingabe, eingegebenesVerb)   
-                    self.umgebung =  self.bewegung.gebeUmgebung()
+            eingegebenesWort = wortVergleicher.vergleiche(usereingabe)
 
-##Achtung, hab hier funktioniert es nicht mehr!
+            if eingegebenesWort is not None:
+                if eingegebenesWort.Worttyp == WortTyp.Flaeche or  eingegebenesWort.Worttyp == WortTyp.Ebene or  eingegebenesWort.Worttyp == WortTyp.Uebergang:
+                    self.bewegung.bewege(usereingabe, eingegebenesWort)   
+                    self.umgebung = self.bewegung.gebeUmgebung()
+                    self.blume:WonderBlume = self.umgebung.gebeBlume(self.bewegung.gebePosition())
+                    if self.blume is not None and self.blume.pruefegepflueckt() == False:
+                        self.wondertext.ergaenzeText("Du siehst eine " + self.blume.identifiziere()+ ".")
 
-                #    self.blume:WonderBlume = self.umgebung.gebeBlume(self.bewegung.gebePosition())
-                #if self.blume.pruefegepflueckt() == False:
-                #    self.wondertext.ergaenzeText("Du stehst vor einer " + self.blume.identifiziere())    
-#               if eingegebenesVerb.vertyp == VerbTyp.Blumenpflege():
-                  #  if self.blume.pruefegepflueckt() == False:
-                  #      if eingegebenesVerb.gebeBezeichnung() == "gießen":
-                  #          self.wondertext.setzeText ( blume.gieße())
-                 #       elif eingegebenesVerb.gebeBezeichnung() == "pflücken":
-#                            self.wondertext.setzeText(blume.pfluecke())
+                elif eingegebenesWort.Worttyp == WortTyp.Blumenpflege:
+                    if self.blume is not None and self.blume.pruefegepflueckt() == False:
+                        if eingegebenesWort.gebeBezeichnung() == "gießen":
+                            self.wondertext.ergaenzeText ( self.blume.gieße())
+                        elif eingegebenesWort.gebeBezeichnung() == "pflücken":
+                            self.wonderInventar.SteckeBlumeInsInventar(self.blume)
+                            self.wondertext.ergaenzeText(self.blume.pfluecke())
+                    else:  
+                        self.wondertext.ergaenzeText("Du kannst hier nicht " + eingegebenesWort.gebeBezeichnung() + ".")
 
+                elif eingegebenesWort.Worttyp == WortTyp.Inventar:
+                    self.wonderInventar.GebeInventarAusgabe()
 
+            if self.wonderInventar.zaehleRiesigeBlumen >= 10:
+                self.wondertext.ergaenzeText("Suche Deine Doktormutter! Deine Doktormutter befindet sich an der Position " + self.DoktormutterPosition.gebeX() +  "." + self.DoktormutterPosition.gebeY() + "." + self.DoktormutterPosition.gebeZ() )   
+         
             self.wondertext.druckeText()           
             self.wondertext.druckeAbschluss()
 

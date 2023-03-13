@@ -1,12 +1,30 @@
-from WonderBlumen import *
-from WonderPosition import Position
-from WonderWoerter import WortVergleicher
+import WonderBlumen 
+
+class Position(object):
+    def __init__(self,x,y,z):
+        self.X = x
+        self.Y = y
+        self.Z = z        
+    def ändereX(self,inkrement):
+        self.X = self.X + inkrement       
+    def ändereY(self,inkrement):
+        self.Y = self.Y + inkrement        
+    def ändereZ(self,inkrement):
+        self.Z = self.Z + inkrement        
+    def gebeX(self):
+        return self.X
+    def gebeY(self):
+        return self.Y
+    def gebeZ(self):
+        return self.Z
+    def gebePositionsAusgabe(self):
+        return ("Du befindest dich an der Position " + str(self.gebeX()) + "." + str(self.gebeY()) + "." + str(self.gebeZ())) + "."
 
 class Umgebung(object):
     
-    def __init__(self, bezeichung,umgebungssatzFuerBlumen, startbegrenzung:Position, endbegrenzung:Position, Wortvergleicher:WortVergleicher, blumenhoehe):  
+    def __init__(self, bezeichung,umgebungssatzFuerBlumen,  startbegrenzung, endbegrenzung, verbvergleicher, blumenhoehe):  
 
-        self.Wortvergleicher = Wortvergleicher
+        self.verbvergleicher = verbvergleicher
         self.bezeichung =bezeichung
         self.umgebungssatzFuerBlumen = umgebungssatzFuerBlumen
         self.startbegrenzung = startbegrenzung
@@ -22,18 +40,16 @@ class Umgebung(object):
         self.uebergangssatzGenau = {}
         self.uebergangssatzOffset = {}
         self.uebergangsgeschwindigkeit = {}
-        self.uebergangsWort = {}
-        self.offsetWort = {}
-        self.anschlussWort = {}
+        self.uebergangsVerb = {}
+        self.offsetVerb = {}
+        self.anschlussVerb = {}
         self.anschlussgeschwindigkeit = {}
         self.naechsteUmgebung = {}
 
-        if blumenhoehe is not None:
-            self.blumenSpawner = BlumenSpawner(self.startbegrenzung, self.endbegrenzung,blumenhoehe, self.umgebungssatzFuerBlumen)
+        self.BlumenSpawner = BlumenSpawner(self, blumenhoehe)
 
-    def gebeBlume(self, position:Position)->WonderBlume:
-        return self.blumenSpawner.gebeBlumeAnPosition(position)
-     
+    def gebeBlume(self, position):
+       return self.BlumenSpawner.gebeBlumeAnPosition(position)
 
     def setzeBewegung(self, bewegung):
         self.bewegung = bewegung
@@ -42,39 +58,39 @@ class Umgebung(object):
     def setzeOffset(self, offset):
         self.offset = offset
     
-    def setzeGeschwindigkeit(self, Wort, geschwindigkeit):
-        self.geschwindigkeiten[Wort.gebeBezeichnung()] = geschwindigkeit 
+    def setzeGeschwindigkeit(self, verb, geschwindigkeit):
+        self.geschwindigkeiten[verb.gebeBezeichnung()] = geschwindigkeit 
 
-    def entferneGeschwindigkeit(self,Wort):
-        del self.geschwindigkeiten[Wort.gebeBezeichnung()]
+    def entferneGeschwindigkeit(self,verb):
+        del self.geschwindigkeiten[verb.gebeBezeichnung()]
     
     def setzeGeschwindigkeitenFuerUebergang(self, typ):
-        self.setzeGeschwindigkeit(self.uebergangsWort[typ],  self.uebergangsgeschwindigkeit[typ])
-        self.setzeGeschwindigkeit(self.anschlussWort[typ],  self.anschlussgeschwindigkeit[typ])
+        self.setzeGeschwindigkeit(self.uebergangsVerb[typ],  self.uebergangsgeschwindigkeit[typ])
+        self.setzeGeschwindigkeit(self.anschlussVerb[typ],  self.anschlussgeschwindigkeit[typ])
 
     def entferneGeschwindigkeitenFuerUebergang(self, typ):
-        self.entferneGeschwindigkeit(self.uebergangsWort[typ])
-        self.entferneGeschwindigkeit(self.anschlussWort[typ])
+        self.entferneGeschwindigkeit(self.uebergangsVerb[typ])
+        self.entferneGeschwindigkeit(self.anschlussVerb[typ])
 
-    def setzeUebergang(self, typ, uebergangssatzGenau, uebergangssatzOffset,uebergangsWortBezeichnung, uebergangsgeschwindigkeit, offsetWortBezeichung, anschlussWortBezeichnug, anschlussgeschwindigkeit, naechsteUmgebung):
+    def setzeUebergang(self, typ, uebergangssatzGenau, uebergangssatzOffset,uebergangsVerbBezeichnung, uebergangsgeschwindigkeit, offsetVerbBezeichung, anschlussVerbBezeichnug, anschlussgeschwindigkeit, naechsteUmgebung):
         self.ueberganstypen.append (typ)
         self.uebergangssatzGenau[typ] = uebergangssatzGenau
         self.uebergangssatzOffset[typ] = uebergangssatzOffset
         self.uebergangsgeschwindigkeit[typ] = uebergangsgeschwindigkeit
-        self.uebergangsWort[typ] = self.Wortvergleicher.gebeWort(uebergangsWortBezeichnung)
-        self.offsetWort[typ] = self.Wortvergleicher.gebeWort(offsetWortBezeichung)
-        self.anschlussWort[typ] = self.Wortvergleicher.gebeWort(anschlussWortBezeichnug)
+        self.uebergangsVerb[typ] = self.verbvergleicher.gebeVerb(uebergangsVerbBezeichnung)
+        self.offsetVerb[typ] = self.verbvergleicher.gebeVerb(offsetVerbBezeichung)
+        self.anschlussVerb[typ] = self.verbvergleicher.gebeVerb(anschlussVerbBezeichnug)
         self.anschlussgeschwindigkeit[typ] = anschlussgeschwindigkeit
         self.naechsteUmgebung[typ] = naechsteUmgebung
     
-    def gebeOffsetWort(self,typ):
-        return self.offsetWort[typ]  
+    def gebeOffsetVerb(self,typ):
+        return self.offsetVerb[typ]  
 
-    def gebeUebergangsWort(self,typ):
-        return self.uebergangsWort[typ]
+    def gebeUebergangsVerb(self,typ):
+        return self.uebergangsVerb[typ]
         
-    def gebeAnschlussWort(self,typ):
-        return self.anschlussWort[typ] 
+    def gebeAnschlussVerb(self,typ):
+        return self.anschlussVerb[typ] 
 
     def gebeUebergangstypen(self):
         return self.ueberganstypen
@@ -82,8 +98,8 @@ class Umgebung(object):
     def gebeBezeichnung(self):      
         return self.bezeichung
     
-    def gebeGeschwindigkeit(self, Wort):   
-        return self.geschwindigkeiten[Wort.gebeBezeichnung()]
+    def gebeGeschwindigkeit(self, verb):   
+        return self.geschwindigkeiten[verb.gebeBezeichnung()]
     
     def gebeStartBegrenzung(self):
         return self.startbegrenzung
@@ -91,14 +107,14 @@ class Umgebung(object):
     def gebeEndbegrenzung(self):
         return self.endbegrenzung
     
-    def gebeWorte(self):
+    def gebeVerben(self):
         return self.geschwindigkeiten.keys()
     
     def gebeUmgebungssatzFuerBlumen(self):
         return self.umgebungssatzFuerBlumen
 
-    def gebeUebergangsWort(self, uebergangstyp):
-        return self.uebergangsWort[uebergangstyp]
+    def gebeUebergangsVerb(self, uebergangstyp):
+        return self.uebergangsVerb[uebergangstyp]
     
     def gebeUebergangssatz(self, vergleichsergebnis, uebergangstyp):
         if "offset" in vergleichsergebnis:
@@ -110,12 +126,12 @@ class Umgebung(object):
          self.naechsteUmgebung[uebergangstyp].setzeBewegung(bewegung)
          return self.naechsteUmgebung[uebergangstyp]
 
-    def vergleicheWorte(self,eingabe):
-        for umgebungsWortBezeichnung in self.gebeWorte():
-           umgebungsWort = self.Wortvergleicher.gebeWort(umgebungsWortBezeichnung)
-           for Wort in umgebungsWort.gebeAlleMoeglichenEingaben():
-                if Wort in eingabe:
-                    return umgebungsWort
+    def vergleicheVerben(self,eingabe):
+        for umgebungsVerbBezeichnung in self.gebeVerben():
+           umgebungsverb = self.verbvergleicher.gebeVerb(umgebungsVerbBezeichnung)
+           for verb in umgebungsverb.gebeAlleMoeglichenEingaben():
+                if verb in eingabe:
+                    return umgebungsverb
         return None
 
     def testeEndBegrenzung(self, userposition):
@@ -183,15 +199,15 @@ class Umgebung(object):
             return "kleineres" 
         
 class UmgebungsGenerator:
-    def __init__(self, Wortvergleicher):
-        self.Wortvergleicher = Wortvergleicher
+    def __init__(self, verbvergleicher):
+        self.verbvergleicher = verbvergleicher
    
         self.__initialisierePositionen()
-        self.__initialisiereStartUmgebung(Wortvergleicher)
-        self.__initialisiereWasserUmgebung(Wortvergleicher)
-        self.__initialisiereWaldUmgebung(Wortvergleicher)
-        self.__initialisiereTreppeUmgebung(Wortvergleicher)
-        self.__initialisiereUniUmgebung(Wortvergleicher)
+        self.__initialisiereStartUmgebung(verbvergleicher)
+        self.__initialisiereWasserUmgebung(verbvergleicher)
+        self.__intiialiereWaldUmgebung(verbvergleicher)
+    #    self.__initialisiereTreppeUmgebung(verbvergleicher)
+    
     
         self.startUmgebung.setzeUebergang("ende",
             "Du stehst vor einem großen See. wenn Du willst, kannst Du jetzt ins Wasser springen und danach schwimmen.",
@@ -216,65 +232,30 @@ class UmgebungsGenerator:
             "Du stehst direkt vor einer großen Treppe. Wenn du willst kannst du diese nun hochsteigen.",
             "Du siehst in der Nähe eine große Treppe. Wenn du willst kannst du diese nun hochsteigen.",
              "gehen", 1, "steigen",  "steigen", 1,  self.waldUmgebung)                         
-        
-        self.treppeUmgebung.setzeUebergang("start",
-            "Du bist am Fuß der Treppe angekommen, und bist wieder im Wald. Hier kannst du wieder gehen oder rennen.",
-            "Du bist fast am Fuß der Treppe angekommen, und bist wieder im Wald. Hier kannst du wieder gehen oder rennen.",
-             "gehen", 1, "steigen",  "gehen", 1, self.waldUmgebung)
-
-        self.treppeUmgebung.setzeUebergang("ende",                                            
-            "Du sehst nun direkt vor dem Universitätsgebäude. Hier kannst du nur gehen. Suche Deine Doktormutter!",
-            "Du sehst nun fast direkt vor dem Universitätsgebäude. Hier kannst du nur gehen. Suche Deine Doktormutter!"
-             "gehen", 1, "steigen",  "gehen", 1, self.uniUmgebung)
-        
-        self.uniUmgebung.setzeUebergang("start",
-            "Du bist wieder der Treppe angekommen und kannst diese hinunter steigen.",
-            "Du bist fast wieder der Treppe angekommen und kannst diese hinunter steigen.",
-             "gehen", 1, "gehen",  "steigen", 1, self.treppeUmgebung)
-
+                                         
+    
     def gebeStartUmgebung(self):
         return self.startUmgebung
-    
-    def gebeDoktormutterPosition(self):
-        plusx = random.randint(self.grenzPositionTreppeUni.gebeX(),self.grenzPositionUniEnde.gebeX()) 
-        plusy = random.randint(self.grenzPositionTreppeUni.gebeY(),self.grenzPositionUniEnde.gebeY()) 
-        z = random.randint(self.grenzPositionTreppeUni.gebeZ(),self.grenzPositionUniEnde.gebeZ()) 
-        minusx = plusx*-1
-        minusy = plusy*-1
-        x = random.choice(plusx,minusx)
-        y= random.choice(plusy, minusy)
-        return Position(x,y,z)      
 
     def __initialisierePositionen(self):
         self.StartPosition = Position(0,0,0)
-        self.grenzPositionStartWasser = Position(10,10,-1)
-        self.grenzPositionWasserWald = Position(20,20,0)
-        self.grenzPositionWaldTreppe = Position (30,30,0)
-        self.grenzPositionTreppeUni = Position(40,40,10)
-        self.grenzPositionUniEnde = Position(50,50,10)
+        self.grenzPositionStartWasser = Position(20,20,-1)
+        self.grenzPositionWasserWald = Position(40,40,0)
+        self.grenzPositionWaldTreppe = Position (60,60,10)
   
-    def __initialisiereStartUmgebung(self,Wortvergleicher):
-        self.startUmgebung = Umgebung ("wiese","von der Wiese", self.StartPosition, self.grenzPositionStartWasser, Wortvergleicher,0 )                                   
-        self.startUmgebung.setzeGeschwindigkeit(self.Wortvergleicher.gebeWort("gehen"),2)
-        self.startUmgebung.setzeGeschwindigkeit(self.Wortvergleicher.gebeWort("rennen"),4)
+    def __initialisiereStartUmgebung(self,verbvergleicher):
+        self.startUmgebung = Umgebung ("wiese","von der Wiese", self.StartPosition, self.grenzPositionStartWasser, verbvergleicher, 1 )                                   
+        self.startUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("gehen"),2)
+        self.startUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("rennen"),4)
         self.startUmgebung.setzeOffset(2)
 
-    def __initialisiereWasserUmgebung(self,Wortvergleicher):
-        self.wasserUmgebung = Umgebung("wasser","aus dem Wasser",self.grenzPositionStartWasser, self.grenzPositionWasserWald,Wortvergleicher,-5)
-        self.wasserUmgebung.setzeGeschwindigkeit(self.Wortvergleicher.gebeWort("schwimmen"),4)
+    def __initialisiereWasserUmgebung(self,verbvergleicher):
+        self.wasserUmgebung = Umgebung("wasser","aus dem Wasser",self.grenzPositionStartWasser, self.grenzPositionWasserWald,verbvergleicher)
+        self.wasserUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("schwimmen"),4)
 
-    def __initialisiereWaldUmgebung(self,Wortvergleicher):
-        self.waldUmgebung = Umgebung("wald","aus dem Wald", self.grenzPositionWasserWald,self.grenzPositionWaldTreppe,Wortvergleicher,0)
-        self.waldUmgebung.setzeGeschwindigkeit(self.Wortvergleicher.gebeWort("gehen"), 1)
-        self.waldUmgebung.setzeGeschwindigkeit(self.Wortvergleicher.gebeWort("rennen"),2)
+    def __intiialiereWaldUmgebung(self,verbvergleicher):
+        self.waldUmgebung = Umgebung("wald","aus dem Wald", self.grenzPositionWasserWald,self.grenzPositionWaldTreppe,verbvergleicher)
+        self.waldUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("gehen"), 1)
+        self.waldUmgebung.setzeGeschwindigkeit(self.verbvergleicher.gebeVerb("rennen"),2)
         self.waldUmgebung.setzeOffset(1)
 
-    def __initialisiereTreppeUmgebung(self,Wortvergleicher):
-        self.treppeUmgebung = Umgebung("Treppe","", self.grenzPositionWaldTreppe,self.grenzPositionTreppeUni,Wortvergleicher,None)
-        self.treppeUmgebung.setzeGeschwindigkeit(self.Wortvergleicher.gebeWort("steigen"), 1)
-        self.treppeUmgebung.setzeOffset(1)
-
-    def __initialisiereUniUmgebung(self,Wortvergleicher):
-        self.uniUmgebung = Umgebung("Treppe","", self.grenzPositionTreppeUni,self.grenzPositionUniEnde,Wortvergleicher,None)
-        self.uniUmgebung.setzeGeschwindigkeit(self.Wortvergleicher.gebeWort("gehen"), 1)
-        self.uniUmgebung.setzeOffset(1)

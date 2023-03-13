@@ -35,7 +35,41 @@ class Verb(object):
     
     def gebeAlleMoeglichenEingaben(self):
         return self.varianten.keys()  
-  
+
+class VerbVergleicher(object):
+    def  __init__(self):
+        self.verbGeneratoren = VerbGeneratoren()
+
+    def vergleiche(self,eingabe):
+        for verbGenerator in self.verbGeneratoren.gebeGeneratoren():
+            for verbGen in verbGenerator.gebeVerben():
+                for verb in verbGen.gebeAlleMoeglichenEingaben():
+                    if verb in eingabe:
+                        return verbGen
+        return None
+    
+    def gebeVerb(self, bezeichnung):
+        for verbGenerator in self.verbGeneratoren.gebeGeneratoren():
+            for verb in verbGenerator.gebeVerben() :
+                if  verb.gebeBezeichnung() == bezeichnung:
+                    return verb
+        return None
+    
+class VerbGeneratoren(object):
+    def  __init__(self):
+       self.flaechenVerben =  VerbGeneratorFlaeche(VerbTyp.Flaeche)
+       self.ebenenVerben = VerbGeneratorEbene(VerbTyp.Ebene)
+       self.uebergangVerben = VerbGeneratorUebergang(VerbTyp.Uebergang)
+       self.interaktionsVerben = VerbGeneratorInteraktion(VerbTyp.Interaktion)
+       self.blumenpflegeVerben = VerbGeneratorBlumenpflege(VerbTyp.Blumenpflege)
+    
+    def gebeGeneratoren(self):
+       yield self.flaechenVerben
+       yield self.ebenenVerben
+       yield self.uebergangVerben    
+       yield self.interaktionsVerben
+       yield self.blumenpflegeVerben
+
 class VerbGeneratorFlaeche(object):
     def  __init__(self,verbtyp):
       self.__initialisiereGehen(verbtyp)
@@ -123,37 +157,3 @@ class VerbGeneratorBlumenpflege(object):
     def __initialisierePfluecke(self, verbtyp):
         self.VerbPfluecken = Verb("pflücken", verbtyp)
         self.VerbPfluecken.fuegeVarianteHinzu("pflücke", ["pflückst", "entwendest", "entreisst"])
-
-class VerbGeneratoren(object):
-    def  __init__(self):
-       self.flaechenVerben =  VerbGeneratorFlaeche(VerbTyp.Flaeche)
-       self.ebenenVerben = VerbGeneratorEbene(VerbTyp.Ebene)
-       self.uebergangVerben = VerbGeneratorUebergang(VerbTyp.Uebergang)
-       self.interaktionsVerben = VerbGeneratorInteraktion(VerbTyp.Interaktion)
-       self.blumenpflegeVerben = VerbGeneratorBlumenpflege(VerbTyp.Blumenpflege)
-    
-    def gebeGeneratoren(self):
-       yield self.flaechenVerben
-       yield self.ebenenVerben
-       yield self.uebergangVerben    
-       yield self.interaktionsVerben
-       yield self.blumenpflegeVerben
-
-class VerbVergleicher(object):
-    def  __init__(self):
-        self.verbGeneratoren = VerbGeneratoren()
-
-    def vergleiche(self,eingabe):
-        for verbGenerator in self.verbGeneratoren.gebeGeneratoren():
-            for verbGen in verbGenerator.gebeVerben():
-                for verb in verbGen.gebeAlleMoeglichenEingaben():
-                    if verb in eingabe:
-                        return verbGen
-        return None
-    
-    def gebeVerb(self, bezeichnung):
-        for verbGenerator in self.verbGeneratoren.gebeGeneratoren():
-            for verb in verbGenerator.gebeVerben() :
-                if  verb.gebeBezeichnung() == bezeichnung:
-                    return verb
-        return None
