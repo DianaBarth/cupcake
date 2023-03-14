@@ -40,7 +40,7 @@ class WonderBlume(object):
 
     def gieße(self):
         if self.groessenzahl < len(self.groessen)-1:
-            self.text = "du gießt die " + self.identifiziere() + "und diese beginnt zu wachsen."
+            self.text = "du gießt die " + self.identifiziere() + " und diese beginnt zu wachsen."
             self.groessenzahl = self.groessenzahl+1
             self.text = self.text + "\n" + "Dies ist nun eine " + self.identifiziere() + "."
         else:
@@ -54,19 +54,19 @@ class BlumenSpawner(object):
         for x in range(startBegrenzung.gebeX(), endBegrenzung.gebeX() ):
             for y in  range(startBegrenzung.gebeY(), endBegrenzung.gebeY()):
                  #mit hoher Wahrscheinlichkeit ist keine Blume vorhanden
-                if random.choice(["vorhanden","nicht vorhanden"])=="vorhanden":
+                if random.choice(["vorhanden","nicht vorhanden", "nicht vorhanden"])=="vorhanden":
                     nordOst = Position(x,y,z)
                     self.alleBlumen.append (WonderBlume(nordOst,umgebungssatz))
                 if x > 0:
-                    if random.choice(["vorhanden","nicht vorhanden"])=="vorhanden":
+                    if random.choice(["vorhanden","nicht vorhanden","nicht vorhanden"])=="vorhanden":
                         nordWest = Position(-x,y,z)
                         self.alleBlumen.append (WonderBlume(nordWest,umgebungssatz))
                 if x!=y:                   
-                    if random.choice(["vorhanden","nicht vorhanden"])=="vorhanden":
+                    if random.choice(["vorhanden","nicht vorhanden","nicht vorhanden"])=="vorhanden":
                         südOst = Position(x,-y,z)  
                         self.alleBlumen.append (WonderBlume(südOst,umgebungssatz))                                  
                     if y > 0:
-                        if random.choice(["vorhanden","nicht vorhanden"])=="vorhanden":
+                        if random.choice(["vorhanden","nicht vorhanden","nicht vorhanden"])=="vorhanden":
                             südWest = Position(-x,-y,z)
                             self.alleBlumen.append (WonderBlume(südWest,umgebungssatz))  
 

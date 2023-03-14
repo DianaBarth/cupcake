@@ -28,6 +28,7 @@ class Umgebung(object):
         self.anschlussgeschwindigkeit = {}
         self.naechsteUmgebung = {}
         self.blumenhoehe = blumenhoehe
+
         if blumenhoehe is not None:
             self.blumenSpawner = BlumenSpawner(self.startbegrenzung, self.endbegrenzung,blumenhoehe, self.umgebungssatzFuerBlumen)
 
@@ -40,6 +41,9 @@ class Umgebung(object):
     def setzeBewegung(self, bewegung):
         self.bewegung = bewegung
 
+    def setzeUnterUndObereGrenze(self,unten, oben):
+        self.unten = unten
+        self.oben = oben
 
     def setzeOffset(self, offset):
         self.offset = offset
@@ -150,7 +154,11 @@ class Umgebung(object):
         elif userposition.gebeY() == - self.endbegrenzung.gebeY():
             return "genau süd"
         elif userposition.gebeY() == - self.endbegrenzung.gebeY() + self.offset:
-            return "offset süd"     
+            return "offset süd"    
+        elif userposition.gebeZ() == self.unten:
+            return "unten angestoßen"
+        elif userposition.gebeZ() == self.oben:
+            return "oben angestoßen"   
         else:
             return "kleineres" 
         
@@ -194,12 +202,11 @@ class UmgebungsGenerator:
         self.__initialisiereStartUmgebung(wortvergleicher)
         self.__initialisiereWasserUmgebung(wortvergleicher)
         self.__initialisiereWaldUmgebung(wortvergleicher)
-        self.__initialisiereTreppeUmgebung(wortvergleicher)
         self.__initialisiereUniUmgebung(wortvergleicher)
     
         self.startUmgebung.setzeUebergang("ende",
-            "Du stehst vor einem großen See. wenn Du willst, kannst Du jetzt ins Wasser springen und danach schwimmen.",
-            "Du siehst in der Nähe einen großen See. Wenn Du willst, kannst Du jetzt ins Wasser springen und danach schwimmen.", 
+            "Du stehst vor einem großen See. wenn Du willst, kannst Du jetzt ins Wasser springen und danach in alle Himmelsrichtunge und nach unten bzw. oben schwimmen.",
+            "Du siehst in der Nähe einen großen See. Wenn Du willst, kannst Du jetzt ins Wasser springen und  und danach in alle Himmelsrichtunge und nach unten bzw. oben schwimmen.",
             "springen", -1, "gehen","schwimmen", 4, self.wasserUmgebung)  
         
         self.wasserUmgebung.setzeUebergang("start",
@@ -217,32 +224,22 @@ class UmgebungsGenerator:
             "springen", -1, "gehen","schwimmen", 4, self.wasserUmgebung)  
                                          
         self.waldUmgebung.setzeUebergang("ende",
-            "Du stehst direkt vor einer großen Treppe. Wenn du willst kannst du diese nun hochsteigen.",
-            "Du siehst in der Nähe eine große Treppe. Wenn du willst kannst du diese nun hochsteigen.",
-             "steigen", 1, "steigen",  "steigen", 1,  self.treppeUmgebung)                         
-        
-        self.treppeUmgebung.setzeUebergang("start",
-            "Du bist am Fuß der Treppe angekommen, und bist wieder im Wald. Hier kannst du wieder gehen oder rennen.",
-            "Du bist fast am Fuß der Treppe angekommen, und bist wieder im Wald. Hier kannst du wieder gehen oder rennen.",
-             "gehen", 1, "steigen",  "gehen", 1, self.waldUmgebung)
-
-        self.treppeUmgebung.setzeUebergang("ende",                                            
-            "Du sehst nun direkt vor dem Universitätsgebäude. Hier kannst du nur gehen. Suche Deine Doktormutter!",
-            "Du sehst nun fast direkt vor dem Universitätsgebäude. Hier kannst du nur gehen. Suche Deine Doktormutter!",
-             "gehen", 1, "steigen",  "gehen", 1, self.uniUmgebung)
+            "Du stehst direkt vor dem Eingang Deiner Universität. Wenn du willst, kannst Du die Türe öffnen und danach weiter gehen.",
+            "Du siehst in der Nähe den Eingang zur Universität.  Wenn du willst, kannst Du die Türe öffnen und danach weiter gehen.",
+             "oeffnen", 1, "gehen",  "gehen", 1,  self.uniUmgebung)                         
         
         self.uniUmgebung.setzeUebergang("start",
-            "Du bist wieder der Treppe angekommen und kannst diese hinunter steigen.",
-            "Du bist fast wieder der Treppe angekommen und kannst diese hinunter steigen.",
-             "gehen", 1, "gehen",  "steigen", 1, self.treppeUmgebung)
+            "Du bist wieder vor der Türe zum Wald angekommen. Wenn Du willst kannst du die Türe öffnen und danach wieder gehen und rennen.",
+            "Du bist fast wieder vor der Türe zum Wald angekommne. Wenn Du willst kannst du die Türe öffnen und danach wieder gehen und rennen.",
+             "oeffnen", 1, "gehen",  "gehen", 1, self.waldUmgebung)
 
     def gebeStartUmgebung(self):
         return self.startUmgebung
     
     def gebeDoktormutterPosition(self):
-        plusx = random.randint(self.grenzPositionTreppeUni.gebeX(),self.grenzPositionUniEnde.gebeX()) 
-        plusy = random.randint(self.grenzPositionTreppeUni.gebeY(),self.grenzPositionUniEnde.gebeY()) 
-        z = random.randint(self.grenzPositionTreppeUni.gebeZ(),self.grenzPositionUniEnde.gebeZ()) 
+        plusx = random.randint(self.grenzPositionWaldUni.gebeX(),self.grenzPositionUniEnde.gebeX()) 
+        plusy = random.randint(self.grenzPositionWaldUni.gebeY(),self.grenzPositionUniEnde.gebeY()) 
+        z = random.randint(self.grenzPositionWaldUni.gebeZ(),self.grenzPositionUniEnde.gebeZ()) 
         minusx = plusx*-1
         minusy = plusy*-1
         x = random.choice([plusx,minusx])
@@ -253,32 +250,30 @@ class UmgebungsGenerator:
         self.StartPosition = Position(0,0,0)
         self.grenzPositionStartWasser = Position(20,20,-1)
         self.grenzPositionWasserWald = Position(40,40,-1)
-        self.grenzPositionWaldTreppe = Position (60,60,0)
-        self.grenzPositionTreppeUni = Position(80,80,10)
-        self.grenzPositionUniEnde = Position(100,100,10)
+        self.grenzPositionWaldUni = Position (60,60,0)
+        self.grenzPositionUniEnde = Position(70,70,0)
   
     def __initialisiereStartUmgebung(self,wortvergleicher):
         self.startUmgebung = Umgebung ("wiese","von der Wiese", self.StartPosition, self.grenzPositionStartWasser,wortvergleicher,0 )                                   
         self.startUmgebung.setzeGeschwindigkeit(self.wortvergleicher.gebeWort("gehen"),2)
         self.startUmgebung.setzeGeschwindigkeit(self.wortvergleicher.gebeWort("rennen"),4)
         self.startUmgebung.setzeOffset(2)
+        self.startUmgenbung.setzeUnterUndObereGrenze(-1,1)
 
     def __initialisiereWasserUmgebung(self,wortvergleicher):
-        self.wasserUmgebung = Umgebung("wasser","aus dem Wasser",self.grenzPositionStartWasser, self.grenzPositionWasserWald,wortvergleicher,-5)
+        self.wasserUmgebung = Umgebung("wasser","aus dem Wasser",self.grenzPositionStartWasser, self.grenzPositionWasserWald,wortvergleicher,-8)
         self.wasserUmgebung.setzeGeschwindigkeit(self.wortvergleicher.gebeWort("schwimmen"),4)
+        self.wasserUmgebung.setzeUnterUndObereGrenze(-8,-1)
 
     def __initialisiereWaldUmgebung(self,wortvergleicher):
-        self.waldUmgebung = Umgebung("wald","aus dem Wald", self.grenzPositionWasserWald,self.grenzPositionWaldTreppe,wortvergleicher,0)
+        self.waldUmgebung = Umgebung("wald","aus dem Wald", self.grenzPositionWasserWald,self.grenzPositionWaldUni,wortvergleicher,0)
         self.waldUmgebung.setzeGeschwindigkeit(self.wortvergleicher.gebeWort("gehen"), 1)
         self.waldUmgebung.setzeGeschwindigkeit(self.wortvergleicher.gebeWort("rennen"),2)
         self.waldUmgebung.setzeOffset(1)
-
-    def __initialisiereTreppeUmgebung(self,wortvergleicher):
-        self.treppeUmgebung = Umgebung("Treppe","", self.grenzPositionWaldTreppe,self.grenzPositionTreppeUni,wortvergleicher,None)
-        self.treppeUmgebung.setzeGeschwindigkeit(self.wortvergleicher.gebeWort("steigen"), 1)
-        self.treppeUmgebung.setzeOffset(1)
+        self.waldUmgebung.setzeUnterUndObereGrenze(-1,1)
 
     def __initialisiereUniUmgebung(self,wortvergleicher):
-        self.uniUmgebung = Umgebung("Treppe","", self.grenzPositionTreppeUni,self.grenzPositionUniEnde,wortvergleicher,None)
+        self.uniUmgebung = Umgebung("Universität","", self.grenzPositionWaldUni,self.grenzPositionUniEnde,wortvergleicher,None)
         self.uniUmgebung.setzeGeschwindigkeit(self.wortvergleicher.gebeWort("gehen"), 1)
-        self.uniUmgebung.setzeOffset(1)
+        self.uniUmgebung.setzeOffset(1)    
+        self.uniUmgebung.setzeUnterUndObereGrenze(-1,1)

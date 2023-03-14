@@ -1,4 +1,4 @@
-import WonderBlumen 
+from WonderBlumen import *
 
 class Position(object):
     def __init__(self,x,y,z):
@@ -46,10 +46,10 @@ class Umgebung(object):
         self.anschlussgeschwindigkeit = {}
         self.naechsteUmgebung = {}
 
-        self.BlumenSpawner = BlumenSpawner(self, blumenhoehe)
+        self.blumenSpawner = BlumenSpawner(self, blumenhoehe)
 
     def gebeBlume(self, position):
-       return self.BlumenSpawner.gebeBlumeAnPosition(position)
+       return self.blumenSpawner.gebeBlumeAnPosition(position)
 
     def setzeBewegung(self, bewegung):
         self.bewegung = bewegung

@@ -29,8 +29,11 @@ class Bewegung(object):
             
         endgrenzTest = self.umgebung.testeEndBegrenzung(self.position) 
         startgrenzTest = self.umgebung.testeStartBegrenzung(self.position) 
-
-        if "kleineres" in endgrenzTest and "kleineres" in startgrenzTest:
+        if "angestoßen" in endgrenzTest or "angestoßen" in startgrenzTest:
+            self.uebergangstyp = "Ende der Ebene"
+            self.grenztest = "angestoßen"
+            return True
+        elif "kleineres" in endgrenzTest and "kleineres" in startgrenzTest:
             self.uebergangstyp = "beides kleiner"
             self.grenzTest = "kleineres"
             return False
@@ -97,21 +100,24 @@ class Bewegung(object):
         
         self.uebergang = self.pruefeUebergang()
         self.wonderText.setzeText("")
+
         if  self.uebergang == False:    
-            Wort = self.umgebung.vergleicheWorte(eingabe)
-            if Wort is None:
+            wort = self.umgebung.vergleicheWorte(eingabe)
+            if wort is None:
                 self.wonderText.ergaenzeText("Achtung,in diesem Gebiet (" + str(self.umgebung.gebeBezeichnung())+ ") kann man nicht " + bewegungsWort.gebeBezeichnung() + ".")
                 
                 if "kleineres" not in self.grenzTest:
                     self.wonderText.ergaenzeText ( self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))                 
                     self.uebergang = True
-
+            elif "angestoßen" in self.grenztest:
+                self.wonderText.ergaenzeText("Achtung, Du stößt an die Grenze des Gebiets " + str(self.umgebung.gebeBezeichnung())+ ") und kannst nicht weiter  " + bewegungsWort.gebeBezeichnung() + ".")
+                               
             elif "kleineres" in self.grenzTest:
                 # Bewegung durchführen
-                if Wort.gebeWortTyp() == WortTyp.Flaeche:
+                if wort.gebeWortTyp() == WortTyp.Flaeche:
                     self.bewegeFläche(Wort)             
                    
-                elif  Wort.gebeWortTyp() == WortTyp.Ebene:
+                elif wort.gebeWortTyp() == WortTyp.Ebene:
                     self.bewegeEbene((Wort))           
                    
                 ##erneut prüfen, um wenn man jetzt an der Grenze ist Übergangssatz anzuzeigen
@@ -198,22 +204,25 @@ class Bewegung(object):
         elif "runter" in self.eingabe:
             self.hoehe(- geschwindigkeit)
         else:
-            self.Wondertext.druckeEingabeNichtErkannt(self.eingabe)
+            self.wonderText.druckeEingabeNichtErkannt(self.eingabe)
             return False
                 
         self.wonderText.ergaenzeText ("Du " + Wort.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + "." )
         return True
    
     def bewegeUebergang(self, Wort):
-        geschwindigkeit = self.umgebung.gebeGeschwindigkeit(Wort)
-        
-        if "hoch" in self.eingabe:
-            self.hoehe(geschwindigkeit)
-        elif "runter" in self.eingabe:
-            self.hoehe(- geschwindigkeit)
+        if Wort.gebeBezeichnung() == "oeffnen":
+           self.wonderText.ergaenzeText ("Du " + str(Wort.gebeEineAusgabeZurEingabe(self.eingabe)) + ".")
         else:
-            self.hoehe(geschwindigkeit)
-
-        self.wonderText.ergaenzeText ("Du " + str(Wort.gebeEineAusgabeZurEingabe(self.eingabe)) + " nach " + self.richtungstext + ".")
-    
+            geschwindigkeit = self.umgebung.gebeGeschwindigkeit(Wort)        
+        
+            if "hoch" in self.eingabe:
+                self.hoehe(geschwindigkeit)
+            elif "runter" in self.eingabe:
+                self.hoehe(- geschwindigkeit)
+            else:
+                self.hoehe(geschwindigkeit)
+        
+            self.wonderText.ergaenzeText ("Du " + str(Wort.gebeEineAusgabeZurEingabe(self.eingabe)) + " nach " + self.richtungstext + ".")
+        
         

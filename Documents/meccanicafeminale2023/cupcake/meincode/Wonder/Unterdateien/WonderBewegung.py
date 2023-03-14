@@ -27,7 +27,11 @@ class Bewegung(object):
         endgrenzTest = self.umgebung.testeEndBegrenzung(self.position) 
         startgrenzTest = self.umgebung.testeStartBegrenzung(self.position) 
 
-        if "kleineres" in endgrenzTest and "kleineres" in startgrenzTest:
+        if "angestoßen" in endgrenzTest or "angestoßen" in startgrenzTest:
+            self.uebergangstyp = "Ende der Ebene"
+            self.grenztest = "angestoßen"
+            return True
+        elif "kleineres" in endgrenzTest and "kleineres" in startgrenzTest:
             self.uebergangstyp = "beides kleiner"
             self.grenzTest = "kleineres"
             return False
@@ -39,6 +43,7 @@ class Bewegung(object):
             self.uebergangstyp = "start"
             self.grenzTest = startgrenzTest
             return True
+      
         else:
             self.uebergangstyp ="grenze nicht vorhanden"
             self.grenzTest = "kleineres"
@@ -108,10 +113,10 @@ class Bewegung(object):
 
             elif "kleineres" in self.grenzTest:
                 # Bewegung durchführen
-                if verb.gebeVerbtyp() == VerbTyp.Flaeche:
+                if verb.gebeWortTyp() ==  WortTyp.Flaeche:
                     self.bewegeFläche(verb)             
                    
-                elif  verb.gebeVerbtyp() == VerbTyp.Ebene:
+                elif  verb.gebeWortTyp() == WortTyp.Ebene:
                     self.bewegeEbene((verb))           
                    
                 ##erneut prüfen, um wenn man jetzt an der Grenze ist Übergangssatz anzuzeigen

@@ -26,13 +26,21 @@ class Spiel(object):
         self.wondertext.ergaenzeText("Du bist eine Doktorandin der Biologie. Deine Aufgabe ist es, 3 rießige Pflanzen zu finden und dann zu deiner Doktormutter zu bringen." + "\n") 
         self.wondertext.ergaenzeText("Deine Doktormutter befindet sich an der Position " + str(self.DoktormutterPosition.gebeX()) +  "." + str(self.DoktormutterPosition.gebeY()) + "." + str(self.DoktormutterPosition.gebeZ()) )   
         self.wondertext.ergaenzeText("Du bist aktuell auf der Wiese und kannst hier gehen oder rennen. Gib hierzu bitte 'gehe' oder 'renne' sowie eine der 4 Himmerlsrichtungen ein.")
+        self.wondertext.ergaenzeText("Um das Spiel vorzeitig zu beenden, gebe bitte 'beenden' ein.")
+
         self.wondertext.druckeText()           
         self.wondertext.druckeAbschluss()
         self.spiellaueft = True
+        beendenAngetriggert = False
 
         while self.spiellaueft:            
+           
+            self.wondertext.setzeText("====================================================" + "\n")
+
             usereingabe = input("Bitte gib hier deinen nächste gewünschte Tätigkeit ein: ").casefold()
+             
             self.eingegebenesWort = self.wortVergleicher.vergleiche(usereingabe)
+
 
             if self.eingegebenesWort is not None:
                 if self.eingegebenesWort.gebeWortTyp() == WortTyp.Flaeche or  self.eingegebenesWort.gebeWortTyp() == WortTyp.Ebene or  self.eingegebenesWort.gebeWortTyp() == WortTyp.Uebergang:
@@ -51,24 +59,30 @@ class Spiel(object):
                             self.wondertext.ergaenzeText(self.wonderInventar.SteckeBlumeInsInventar(self.blume))                                       
                     else:  
                         self.wondertext.ergaenzeText("Du kannst hier nicht " + self.eingegebenesWort.gebeBezeichnung() + ".")
-
                 elif self.eingegebenesWort.gebeWortTyp() == WortTyp.Inventar:
                     self.wondertext.ergaenzeText(self.wonderInventar.GebeInventarAusgabe())
-    
+                elif self.eingegebenesWort.gebeWortTyp() == WortTyp.SpielBeenden:
+                    if beendenAngetriggert == False:
+                          self.wondertext.ergaenzeText("Möchtest Du wirklich das Spiel vorzeitig beenden? Dann wiederhole Deine Eingabe!")
+                          beendenAngetriggert = True
+                    else:
+                        self.wondertext.ergaenzeText("Du beendest nun das Spiel. Viel Spaß noch!")
+                        self.spiellaueft = False
             else:
                 self.wondertext.druckeEingabeNichtErkannt(usereingabe)
 
-
-            if (self.bewegung.gebePosition() != self.DoktormutterPosition):
-                if self.wonderInventar.zaehleRiesigeBlumen() >= 3:
-                     self.wondertext.ergaenzeText("Suche Deine Doktormutter! Deine Doktormutter befindet sich an der Position " + str(self.DoktormutterPosition.gebeX()) +  "." + str(self.DoktormutterPosition.gebeY()) + "." + str(self.DoktormutterPosition.gebeZ()) )   
-            else:
-                if self.wonderInventar.zaehleRiesigeBlumen() < 10:
+            if (self.bewegung.gebePosition().gebeX() == self.DoktormutterPosition.gebeX() and self.bewegung.gebePosition().gebeY() == self.DoktormutterPosition.gebeY()):
+                self.wondertext.ergaenzeText("-----" + "\n")
+                if self.wonderInventar.zaehleRiesigeBlumen() < 3:                    
                     self.wondertext.ergaenzeText("Vor dir steht deine Doktormutter, aber du kannst ihr noch nicht genügend rießige Blumen vorweisen!")
-                else:
+                else:                  
                     self.wondertext.ergaenzeText("Vor dir steht deine Doktormutter. Da du genug rießige Blumen im Inventar hast, überreicht sie dir deinen Doktortitel! Du hast das Ziel des Spiels erreicht!")
                     self.spiellaueft = False   
-         
+            elif self.wonderInventar.zaehleRiesigeBlumen() >= 3:
+                self.wondertext.ergaenzeText("-----" + "\n")
+                self.wondertext.ergaenzeText("Suche Deine Doktormutter! Deine Doktormutter befindet sich an der Position " + str(self.DoktormutterPosition.gebeX()) +  "." + str(self.DoktormutterPosition.gebeY()) + "." + str(self.DoktormutterPosition.gebeZ()) )   
+   
+
             self.wondertext.druckeText()           
             self.wondertext.druckeAbschluss()
 
