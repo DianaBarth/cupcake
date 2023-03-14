@@ -47,60 +47,60 @@ class Bewegung(object):
             self.grenzTest = "kleineres"
             return False
 
-    def praktiziereUebergang(self, benutzereingabe, benutzerwort, vergleichsergebnis, uebergangstyp):
+    def praktiziereUebergang(self, benutzereingabe, benutzerWort, vergleichsergebnis, uebergangstyp):
         
-        uebergangswort = self.umgebung.gebeUebergangswort(uebergangstyp)
+        uebergangsWort = self.umgebung.gebeUebergangsWort(uebergangstyp)
         
-        if uebergangswort.gebeBezeichnung() ==  benutzerwort.gebeBezeichnung():  
+        if uebergangsWort.gebeBezeichnung() ==  benutzerWort.gebeBezeichnung():  
             self.umgebung.setzeGeschwindigkeitenFuerUebergang(uebergangstyp)
       
-            anschlusswort = self.umgebung.gebeAnschlusswort(uebergangstyp)
+            anschlussWort = self.umgebung.gebeAnschlussWort(uebergangstyp)
 
             if "offset" in vergleichsergebnis:
-                offsetwort = self.umgebung.gebeOffsetwort(uebergangstyp)   
+                offsetWort = self.umgebung.gebeOffsetWort(uebergangstyp)   
 
-                self.setzeEingabe(offsetwort.gebeBezeichnung() + " " + vergleichsergebnis)
-                self.bewegeEbene(offsetwort)
+                self.setzeEingabe(offsetWort.gebeBezeichnung() + " " + vergleichsergebnis)
+                self.bewegeEbene(offsetWort)
           
-                self.setzeEingabe(uebergangswort.gebeBezeichnung() + " " + vergleichsergebnis)             
-                self.bewegeUebergang(uebergangswort)
+                self.setzeEingabe(uebergangsWort.gebeBezeichnung() + " " + vergleichsergebnis)             
+                self.bewegeUebergang(uebergangsWort)
                  
-                self.setzeEingabe(anschlusswort.gebeBezeichnung() + " " + vergleichsergebnis)             
-                self.bewegeEbene(anschlusswort)                        
+                self.setzeEingabe(anschlussWort.gebeBezeichnung() + " " + vergleichsergebnis)             
+                self.bewegeEbene(anschlussWort)                        
             else:
-                self.setzeEingabe(uebergangswort.gebeBezeichnung() + " " + vergleichsergebnis)             
-                self.bewegeUebergang(uebergangswort)              
-                self.setzeEingabe(anschlusswort.gebeBezeichnung() + " " + vergleichsergebnis)                          
-                self.bewegeEbene(anschlusswort)                           
+                self.setzeEingabe(uebergangsWort.gebeBezeichnung() + " " + vergleichsergebnis)             
+                self.bewegeUebergang(uebergangsWort)              
+                self.setzeEingabe(anschlussWort.gebeBezeichnung() + " " + vergleichsergebnis)                          
+                self.bewegeEbene(anschlussWort)                           
                 self.umgebung.entferneGeschwindigkeitenFuerUebergang(uebergangstyp)            
             return True 
         else:
             if "nord" in vergleichsergebnis and "nord" in benutzereingabe   :
-                print("Du kannst nicht nach Norden " + benutzerwort.gebeBezeichnung() + ".")
+                print("Du kannst nicht nach Norden " + benutzerWort.gebeBezeichnung() + ".")
                 print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
             elif "ost" in vergleichsergebnis and "ost" in benutzereingabe:
-                print("Du kannst nicht nach Osten " + benutzerwort.gebeBezeichnung() + ".")
+                print("Du kannst nicht nach Osten " + benutzerWort.gebeBezeichnung() + ".")
                 print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
             elif "süd" in vergleichsergebnis and "süd" in benutzereingabe:
-                print("Du kannst nicht nach Süden " + benutzerwort.gebeBezeichnung() + ".")
+                print("Du kannst nicht nach Süden " + benutzerWort.gebeBezeichnung() + ".")
                 print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
             elif "west" in vergleichsergebnis and "west" in benutzereingabe:
-                print("Du kannst nicht nach Westen " + benutzerwort.gebeBezeichnung() + ".")
+                print("Du kannst nicht nach Westen " + benutzerWort.gebeBezeichnung() + ".")
                 print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
             else:  
-                 self.bewegeEbene(benutzerwort)
+                 self.bewegeEbene(benutzerWort)
 
             return False  
 
-    def bewege(self, eingabe, bewegungswort):
+    def bewege(self, eingabe, bewegungsWort):
         self.eingabe =  eingabe
         
         self.uebergang = self.pruefeUebergang()
         self.wonderText.setzeText("")
         if  self.uebergang == False:    
-            wort = self.umgebung.vergleicheworten(eingabe)
-            if wort is None:
-                self.wonderText.ergaenzeText("Achtung,in diesem Gebiet (" + str(self.umgebung.gebeBezeichnung())+ ") kann man nicht " + bewegungswort.gebeBezeichnung() + ".")
+            Wort = self.umgebung.vergleicheWorte(eingabe)
+            if Wort is None:
+                self.wonderText.ergaenzeText("Achtung,in diesem Gebiet (" + str(self.umgebung.gebeBezeichnung())+ ") kann man nicht " + bewegungsWort.gebeBezeichnung() + ".")
                 
                 if "kleineres" not in self.grenzTest:
                     self.wonderText.ergaenzeText ( self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))                 
@@ -108,11 +108,11 @@ class Bewegung(object):
 
             elif "kleineres" in self.grenzTest:
                 # Bewegung durchführen
-                if wort.gebeworttyp() == wortTyp.Flaeche:
-                    self.bewegeFläche(wort)             
+                if Wort.gebeWortTyp() == WortTyp.Flaeche:
+                    self.bewegeFläche(Wort)             
                    
-                elif  wort.gebeworttyp() == wortTyp.Ebene:
-                    self.bewegeEbene((wort))           
+                elif  Wort.gebeWortTyp() == WortTyp.Ebene:
+                    self.bewegeEbene((Wort))           
                    
                 ##erneut prüfen, um wenn man jetzt an der Grenze ist Übergangssatz anzuzeigen
                 self.uebergang = self.pruefeUebergang()
@@ -128,7 +128,7 @@ class Bewegung(object):
             self.wonderText.ergaenzeText(self.position.gebePositionsAusgabe())
 
         elif self.uebergang == True:         
-            if self.praktiziereUebergang(eingabe,bewegungswort,self.grenzTest, self.uebergangstyp) == True:
+            if self.praktiziereUebergang(eingabe,bewegungsWort,self.grenzTest, self.uebergangstyp) == True:
                 ##Übergang durchführen             
                 self.umgebung = self.umgebung.gebeNaechsteUmgebung(self, self.uebergangstyp)
             
@@ -163,9 +163,9 @@ class Bewegung(object):
 
     #Bewegung allgemein
 
-    def bewegeFläche(self, wort):
+    def bewegeFläche(self, Wort):
 
-        geschwindigkeit = self.umgebung.gebeGeschwindigkeit(wort)
+        geschwindigkeit = self.umgebung.gebeGeschwindigkeit(Wort)
 
         if "nord" in self.eingabe:
             self.nord(geschwindigkeit)
@@ -176,14 +176,14 @@ class Bewegung(object):
         elif "west" in self.eingabe:
             self.west(geschwindigkeit)
         else:
-            self.Wondertext.druckeEingabeNichtErkannt()
+            self.wonderText.druckeEingabeNichtErkannt(self.eingabe)
             return False
         
-        self.wonderText.ergaenzeText ("Du " + wort.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + ".")
+        self.wonderText.ergaenzeText ("Du " + Wort.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + ".")
         return True
-    def bewegeEbene(self, wort):
+    def bewegeEbene(self, Wort):
 
-        geschwindigkeit = self.umgebung.gebeGeschwindigkeit(wort)
+        geschwindigkeit = self.umgebung.gebeGeschwindigkeit(Wort)
 
         if "nord" in self.eingabe:
             self.nord(geschwindigkeit)
@@ -198,14 +198,14 @@ class Bewegung(object):
         elif "runter" in self.eingabe:
             self.hoehe(- geschwindigkeit)
         else:
-            self.Wondertext.druckeEingabeNichtErkannt()
+            self.Wondertext.druckeEingabeNichtErkannt(self.eingabe)
             return False
                 
-        self.wonderText.ergaenzeText ("Du " + wort.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + "." )
+        self.wonderText.ergaenzeText ("Du " + Wort.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + "." )
         return True
-    
-    def bewegeUebergang(self, wort):
-        geschwindigkeit = self.umgebung.gebeGeschwindigkeit(wort)
+   
+    def bewegeUebergang(self, Wort):
+        geschwindigkeit = self.umgebung.gebeGeschwindigkeit(Wort)
         
         if "hoch" in self.eingabe:
             self.hoehe(geschwindigkeit)
@@ -214,6 +214,6 @@ class Bewegung(object):
         else:
             self.hoehe(geschwindigkeit)
 
-        self.wonderText.ergaenzeText ("Du " + str(wort.gebeEineAusgabeZurEingabe(self.eingabe)) + " nach " + self.richtungstext + ".")
+        self.wonderText.ergaenzeText ("Du " + str(Wort.gebeEineAusgabeZurEingabe(self.eingabe)) + " nach " + self.richtungstext + ".")
     
         

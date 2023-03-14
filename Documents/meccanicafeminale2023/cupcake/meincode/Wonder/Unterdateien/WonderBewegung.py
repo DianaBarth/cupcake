@@ -176,7 +176,7 @@ class Bewegung(object):
         elif "west" in self.eingabe:
             self.west(geschwindigkeit)
         else:
-            self.Wondertext.druckeEingabeNichtErkannt()
+            self.Wondertext.druckeEingabeNichtErkannt(self.eingabe)
             return False
         
         self.WonderText.setzeText ("Du " + verb.gebeEineAusgabeZurEingabe(self.eingabe) + " nach " + self.richtungstext + ".")

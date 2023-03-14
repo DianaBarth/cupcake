@@ -18,4 +18,4 @@ class WonderText(object):
         self.text =""
 
     def druckeEingabeNichtErkannt(self,eingabe):
-        print("Achtung, Eingabe '" + eingabe  +  "' nicht erkannt! Bitte versuche es erneut!")
+        self.text = "Achtung, Eingabe '" + eingabe  +  "' nicht erkannt! Bitte versuche es erneut!"
