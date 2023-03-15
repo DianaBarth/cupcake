@@ -8,7 +8,6 @@ class WonderInventar(object):
         self.wortvergleicher = wortvergleicher
         self.text =""
 
-
     def SteckeBlumeInsInventar(self,blume:WonderBlume):
         self.inventar.append(blume)
         return "Du hast die Blume nun in deiner Tasche. Versuche nun dein Inventar anzusehen!"
