@@ -10,7 +10,7 @@ class WonderInventar(object):
 
     def SteckeBlumeInsInventar(self,blume:WonderBlume):
         self.inventar.append(blume)
-        return "Du hast die Blume nun in deiner Tasche. Versuche nun dein Inventar anzusehen!"
+        return "Du hast die Blume nun in deiner Tasche. Versuche nun deine Tasche anzusehen!"
  
     def zaehleRiesigeBlumen(self):
         zaehler=0

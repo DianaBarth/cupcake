@@ -24,8 +24,8 @@ class Spiel(object):
 
         self.wondertext.setzeText("=================WonderDoktorandin========================" + "\n")
         self.wondertext.ergaenzeText("Du bist eine Doktorandin der Biologie. Deine Aufgabe ist es, 3 rießige Pflanzen zu finden und dann zu deiner Doktormutter zu bringen." + "\n") 
-        self.wondertext.ergaenzeText("Deine Doktormutter befindet sich an der Position " + str(self.DoktormutterPosition.gebeX()) +  "." + str(self.DoktormutterPosition.gebeY()) + "." + str(self.DoktormutterPosition.gebeZ()) )   
-        self.wondertext.ergaenzeText("Du bist aktuell auf der Wiese und kannst hier gehen oder rennen. Gib hierzu bitte 'gehe' oder 'renne' sowie eine der 4 Himmerlsrichtungen ein.")
+        self.wondertext.ergaenzeText("Deine Doktormutter befindet sich an der Position (X.Y.Z=)" + str(self.DoktormutterPosition.gebeX()) +  "." + str(self.DoktormutterPosition.gebeY()) + "." + str(self.DoktormutterPosition.gebeZ()) )   
+        self.wondertext.ergaenzeText("Du bist aktuell auf der Wiese an Position 0.0.0 und kannst hier gehen oder rennen. Gib hierzu bitte 'gehe' oder 'renne' sowie eine der 4 Himmelsrichtungen ein.")
         self.wondertext.ergaenzeText("Um das Spiel vorzeitig zu beenden, gebe bitte 'beenden' ein.")
 
         self.wondertext.druckeText()           
@@ -49,6 +49,7 @@ class Spiel(object):
                     if self.blume is not None and self.blume.pruefegepflueckt() == False:
                         self.wondertext.ergaenzeText("Du siehst eine " + self.blume.identifiziere()+ ".")
                         self.wondertext.ergaenzeText("Du kannst Blumen gießen und pflücken.")
+                        
                 elif self.eingegebenesWort.gebeWortTyp() == WortTyp.Blumenpflege:
                     if self.blume is not None and self.blume.pruefegepflueckt() == False:
                         if self.eingegebenesWort.gebeBezeichnung() == "gießen":
@@ -58,8 +59,10 @@ class Spiel(object):
                             self.wondertext.ergaenzeText(self.wonderInventar.SteckeBlumeInsInventar(self.blume))                                       
                     else:  
                         self.wondertext.ergaenzeText("Du kannst hier nicht " + self.eingegebenesWort.gebeBezeichnung() + ".")
+
                 elif self.eingegebenesWort.gebeWortTyp() == WortTyp.Inventar:
                     self.wondertext.ergaenzeText(self.wonderInventar.GebeInventarAusgabe())
+
                 elif self.eingegebenesWort.gebeWortTyp() == WortTyp.SpielBeenden:
                     if beendenAngetriggert == False:
                           self.wondertext.ergaenzeText("Möchtest Du wirklich das Spiel vorzeitig beenden? Dann wiederhole Deine Eingabe!")

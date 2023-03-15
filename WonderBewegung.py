@@ -124,7 +124,7 @@ class Bewegung(object):
 
             return False  
 
-    def bewege(self, eingabe, bewegungsWort):
+    def bewege(self, eingabe, bewegungsWort:Wort):
         self.eingabe =  eingabe
         
         self.uebergang = self.pruefeUebergang()
@@ -134,8 +134,7 @@ class Bewegung(object):
             wort = self.umgebung.vergleicheWorte(eingabe)
             if wort is None:
                 self.wonderText.ergaenzeText("Achtung,in diesem Gebiet (" + str(self.umgebung.gebeBezeichnung())+ ") kann man nicht " + bewegungsWort.gebeBezeichnung() + ".")
-                
-            if "kleineres" not in self.grenzTest:
+            elif "kleineres" not in self.grenzTest:
                     self.wonderText.ergaenzeText ( self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))                 
                     self.uebergang = True                                 
             elif "kleineres" in self.grenzTest:
@@ -144,7 +143,7 @@ class Bewegung(object):
                     self.bewegeFläche(wort)             
                    
                 elif wort.gebeWortTyp() == WortTyp.Ebene:
-                    self.bewegeEbene((wort))           
+                    self.bewegeEbene(wort)          
                    
                 ##erneut prüfen, um wenn man jetzt an der Grenze ist Übergangssatz anzuzeigen
                 self.uebergang = self.pruefeUebergang()
