@@ -25,16 +25,15 @@ class Wort(object):
     def gebeWortTyp(self):
         return self.wortTyp
 
-    def fuegeVarianteHinzu(self,eingabe, ausgabe):  ## ausgabe als Array   
+    def fuegeVarianteHinzu(self,eingabe, ausgabe):  
         self.varianten[eingabe] =  ausgabe
 
     def gebeEineAusgabeZurEingabe (self,eingabe):
         for eingabeVariante in self.gebeAlleMoeglichenEingaben():
             if eingabeVariante in eingabe:
                 return random.choice(self.varianten[eingabeVariante])
-        
-        return False
-    
+        return ""
+
     def gebeAlleMoeglichenEingaben(self):
         return self.varianten.keys()  
            
@@ -128,16 +127,17 @@ class WortGeneratorInventar(object):
     
     def __initialisiereSchaue(self, wortTyp:WortTyp):
          self.wortSchauen = Wort("schauen", wortTyp)
-         self.wortSchauen.fuegeVarianteHinzu("schau", ["schaust ins Inventar und siehst ", "guckst ins Inventar und erblickst ", "blickst ins Inventar und begutachtest ","schaust in die Tasche und erkennst", "guckst in die Tasche und siehst " ,"blickst in die Tasche und erkennst ", "schaust in den Beutel und siehst ", "guckst in den Beutel und erkennst" ,"blickst in den Beutel und begutachtest"])
-         self.wortSchauen.fuegeVarianteHinzu("guck", ["schaust ins Inventar und siehst ", "guckst ins Inventar und erblickst " ,"blickst ins Inventar und begutachtest ","schaust in die Tasche und erkennst", "guckst in die Tasche und siehst ", "blickst ind die Tasche und erkennst ", "schaust in den Beutel und siehst ", "guckst in den Beutel und erkennst" ,"blickst in den Beutel und begutachtest"])
+         self.wortSchauen.fuegeVarianteHinzu("schau", ["schaust ins Inventar und siehst ", "guckst ins Inventar und erblickst ", "blickst ins Inventar und begutachtest ","schaust in die Tasche und erkennst", "guckst in die Tasche und siehst " ,"blickst in die Tasche und erkennst ", "schaust in den Beutel und siehst ", "guckst in den Beutel und erkennst","blickst in den Beutel und begutachtest"])
+         self.wortSchauen.fuegeVarianteHinzu("guck", ["schaust ins Inventar und siehst ", "guckst ins Inventar und erblickst " ,"blickst ins Inventar und begutachtest ","schaust in die Tasche und erkennst", "guckst in die Tasche und siehst ", "blickst ind die Tasche und erkennst ", "schaust in den Beutel und siehst ", "guckst in den Beutel und erkennst","blickst in den Beutel und begutachtest"])
          self.wortSchauen.fuegeVarianteHinzu("blick", ["schaust ins Inventar und siehst ", "guckst ins Inventar und erblickst ", "blickst ins Inventar und begutachtest ","schaust in die Tasche und erkennst", "guckst in die Tasche und siehst " ,"blickst ind die Tasche und erkennst ", "schaust in den Beutel und siehst ", "guckst in den Beutel und erkennst", "blickst in den Beutel und begutachtest"])
-             
+
     def __initialisiereInventar(self, wortTyp:WortTyp):
          self.wortInventar = Wort("Inventar", wortTyp)
-         self.wortInventar.fuegeVarianteHinzu("Inventar", ["schaust ins Inventar und siehst ", "guckst ins Inventar und erblickst " ,"blickst ins Inventar und begutachtest ","schaust in die Tasche und erkennst", "guckst in die Tasche und siehst " ,"blickst ind die Tasche und erkennst ", "schaust in den Beutel und siehst ", "guckst in den Beutel und erkennst" ,"blickst in den Beutel und begutachtest"])
-         self.wortInventar.fuegeVarianteHinzu("Tasche",["schaust ins Inventar und siehst ", "guckst ins Inventar und erblickst ", "blickst ins Inventar und begutachtest ","schaust in die Tasche und erkennst", "guckst in die Tasche und siehst ", "blickst ind die Tasche und erkennst ", "schaust in den Beutel und siehst ", "guckst in den Beutel und erkennst" ,"blickst in den Beutel und begutachtest"])
-         self.wortInventar.fuegeVarianteHinzu("Beutel",["schaust ins Inventar und siehst ", "guckst ins Inventar und erblickst ", "blickst ins Inventar und begutachtest ","schaust in die Tasche und erkennst", "guckst in die Tasche und siehst ", "blickst ind die Tasche und erkennst ", "schaust in den Beutel und siehst ", "guckst in den Beutel und erkennst" ,"blickst in den Beutel und begutachtest"])
-
+         self.wortInventar.fuegeVarianteHinzu("inventar", ["schaust ins Inventar und siehst ", "guckst ins Inventar und erblickst " ,"blickst ins Inventar und begutachtest ","schaust in die Tasche und erkennst", "guckst in die Tasche und siehst " ,"blickst ind die Tasche und erkennst ", "schaust in den Beutel und siehst ", "guckst in den Beutel und erkennst" ,"blickst in den Beutel und begutachtest"])
+         self.wortInventar.fuegeVarianteHinzu("tasche",["schaust ins Inventar und siehst ", "guckst ins Inventar und erblickst ", "blickst ins Inventar und begutachtest ","schaust in die Tasche und erkennst", "guckst in die Tasche und siehst ", "blickst ind die Tasche und erkennst ", "schaust in den Beutel und siehst ", "guckst in den Beutel und erkennst" ,"blickst in den Beutel und begutachtest"])
+         self.wortInventar.fuegeVarianteHinzu("beutel",["schaust ins Inventar und siehst ", "guckst ins Inventar und erblickst ", "blickst ins Inventar und begutachtest ","schaust in die Tasche und erkennst", "guckst in die Tasche und siehst ", "blickst ind die Tasche und erkennst ", "schaust in den Beutel und siehst ", "guckst in den Beutel und erkennst" ,"blickst in den Beutel und begutachtest"])
+ 
+   
 class WortGeneratoren(object):
     def  __init__(self):
         self.flaechenWorte =  WortGeneratorFlaeche(WortTyp.Flaeche)
@@ -169,7 +169,7 @@ class WortVergleicher(object):
     
     def gebeWort(self, bezeichnung):
         for WortGenerator in  self.wortGeneratoren.gebeGeneratoren():
-            for Wort in WortGenerator.gebeWorte() :
-                if  Wort.gebeBezeichnung() == bezeichnung:
-                    return Wort
+            for wort in WortGenerator.gebeWorte() :
+                if  wort.gebeBezeichnung() == bezeichnung:
+                    return wort
         return None

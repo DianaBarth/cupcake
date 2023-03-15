@@ -23,7 +23,7 @@ class WonderInventar(object):
         if len(self.inventar) == 0:
             self.text ="Du hast nichts im Inventar!"
         else:
-            self.text = "Du " + self.wortvergleicher.gebeWort("Inventar").gebeEineAusgabeZurEingabe("Inventar") + " "
+            self.text = "Du " + self.wortvergleicher.gebeWort("Inventar").gebeEineAusgabeZurEingabe("inventar") + " "
             if len(self.inventar) == 1:
                 self.text =self.text + "genau eine Blume: \n"            
             else:

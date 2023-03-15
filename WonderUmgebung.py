@@ -266,9 +266,9 @@ class UmgebungsGenerator:
     def __initialisierePositionen(self):
         self.StartPosition = Position(0,0,0)
         self.grenzPositionStartWasser = Position(20,20,-1)
-        self.grenzPositionWasserWald = Position(40,40,-1)
-        self.grenzPositionWaldUni = Position (60,60,0)
-        self.grenzPositionUniEnde = Position(70,70,0)
+        self.grenzPositionWasserWald = Position(32,32,-1)
+        self.grenzPositionWaldUni = Position (40,40,0)
+        self.grenzPositionUniEnde = Position(50,50,0)
   
     def __initialisiereStartUmgebung(self,wortvergleicher):
         self.startUmgebung = Umgebung ("wiese","von der Wiese", self.StartPosition, self.grenzPositionStartWasser,wortvergleicher,0 )                                   
