@@ -2,13 +2,13 @@ from WonderWoerter import *
 from WonderTexte import *
 
 class Bewegung(object):
-    def __init__(self, startUmgebung, wonderText:WonderText):
+    def __init__(self, startUmgebung, wonderText:WonderText, wortVergleicher:WortVergleicher):
           self.wonderText = wonderText
           self.text = ""
           self.richtungstext =""  
           self.umgebung = startUmgebung
           self.position = startUmgebung.gebeStartBegrenzung()
-         
+          self.wortVergleicher = wortVergleicher
           self.kannfliegen = False
           self.eingabe = "start"
           self.uebergang = False
@@ -30,11 +30,7 @@ class Bewegung(object):
         endgrenzTest = self.umgebung.testeEndBegrenzung(self.position) 
         startgrenzTest = self.umgebung.testeStartBegrenzung(self.position) 
         
-        if "angestoßen" in endgrenzTest or "angestoßen" in startgrenzTest:
-            self.uebergangstyp = "Ende der Ebene"
-            self.grenztest = "angestoßen"
-            return True
-        elif "kleineres" in endgrenzTest and "kleineres" in startgrenzTest:
+        if "kleineres" in endgrenzTest and "kleineres" in startgrenzTest:
             self.uebergangstyp = "beides kleiner"
             self.grenzTest = "kleineres"
             return False
@@ -52,12 +48,18 @@ class Bewegung(object):
             return False
 
     def praktiziereUebergang(self, benutzereingabe, benutzerWort, vergleichsergebnis, uebergangstyp):
-        
+        #Rückgabewert = true wenn Übergang durchgeführt, ansonsten false
         uebergangsWort = self.umgebung.gebeUebergangsWort(uebergangstyp)
         
-        if uebergangsWort.gebeBezeichnung() ==  benutzerWort.gebeBezeichnung():  
-            self.umgebung.setzeGeschwindigkeitenFuerUebergang(uebergangstyp)
-      
+        if uebergangsWort is not None and uebergangsWort.gebeBezeichnung() ==  benutzerWort.gebeBezeichnung():  
+
+            if self.umgebung.gebeBezeichnung() == "wasser":
+                while self.position.gebeZ() < -1:
+                    self.setzeEingabe("schwimme oben")
+                    self.bewegeEbene(self.wortVergleicher.gebeWort("schwimmen"))
+
+
+            self.umgebung.setzeGeschwindigkeitenFuerUebergang(uebergangstyp)      
             anschlussWort = self.umgebung.gebeAnschlussWort(uebergangstyp)
 
             if "offset" in vergleichsergebnis:
@@ -79,19 +81,45 @@ class Bewegung(object):
                 self.umgebung.entferneGeschwindigkeitenFuerUebergang(uebergangstyp)            
             return True 
         else:
-            if "nord" in vergleichsergebnis and "nord" in benutzereingabe   :
-                print("Du kannst nicht nach Norden " + benutzerWort.gebeBezeichnung() + ".")
-                print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
-            elif "ost" in vergleichsergebnis and "ost" in benutzereingabe:
-                print("Du kannst nicht nach Osten " + benutzerWort.gebeBezeichnung() + ".")
-                print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
-            elif "süd" in vergleichsergebnis and "süd" in benutzereingabe:
-                print("Du kannst nicht nach Süden " + benutzerWort.gebeBezeichnung() + ".")
-                print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
-            elif "west" in vergleichsergebnis and "west" in benutzereingabe:
-                print("Du kannst nicht nach Westen " + benutzerWort.gebeBezeichnung() + ".")
-                print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
-            else:  
+            if "nord" in vergleichsergebnis:
+                if "nord" in benutzereingabe:
+                    print("Du kannst nicht nach Norden " + benutzerWort.gebeBezeichnung() + ".")
+                    print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
+                elif "süd" in benutzereingabe:
+                     self.bewegeEbene(benutzerWort)                     
+                else:
+                    print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
+                    print("Wenn Du nicht nach Norden weiter willst, musst du erst wieder einen Schritt zurück nach Süden laufen!")                    
+            elif "süd" in vergleichsergebnis:
+                if "süd" in benutzereingabe:
+                    print("Du kannst nicht nach Süden " + benutzerWort.gebeBezeichnung() + ".")
+                    print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
+                elif "nord" in benutzereingabe:
+                     self.bewegeEbene(benutzerWort)                    
+                else:
+                    print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
+                    print("Wenn Du nicht nach Süden weiter willst, musst du erst wieder einen Schritt zurück nach Norden laufen!")                    
+            elif "ost" in vergleichsergebnis:
+                if "ost" in benutzereingabe:
+                    print("Du kannst nicht nach Osten " + benutzerWort.gebeBezeichnung() + ".")
+                    print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
+                elif "west" in benutzereingabe:
+                    self.bewegeEbene(benutzerWort)
+                    
+                else:
+                    print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
+                    print("Wenn Du nicht nach Osten weiter willst, musst du erst wieder einen Schritt zurück nach Westen laufen!")                    
+            elif "west" in vergleichsergebnis:
+                if "west" in benutzereingabe:
+                    print("Du kannst nicht nach Westen " + benutzerWort.gebeBezeichnung() + ".")
+                    print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
+                elif "ost" in benutzereingabe:
+                     self.bewegeEbene(benutzerWort)
+                    
+                else:
+                    print(self.umgebung.gebeUebergangssatz(vergleichsergebnis,uebergangstyp))
+                    print("Wenn Du nicht nach Westen weiter willst, musst du erst wieder einen Schritt zurück nach Osten laufen!")                    
+            else: 
                  self.bewegeEbene(benutzerWort)
 
             return False  
@@ -107,12 +135,9 @@ class Bewegung(object):
             if wort is None:
                 self.wonderText.ergaenzeText("Achtung,in diesem Gebiet (" + str(self.umgebung.gebeBezeichnung())+ ") kann man nicht " + bewegungsWort.gebeBezeichnung() + ".")
                 
-                if "kleineres" not in self.grenzTest:
+            if "kleineres" not in self.grenzTest:
                     self.wonderText.ergaenzeText ( self.umgebung.gebeUebergangssatz(self.grenzTest, self.uebergangstyp))                 
-                    self.uebergang = True
-            elif "angestoßen" in self.grenzTest:
-                self.wonderText.ergaenzeText("Achtung, Du stößt an die Grenze des Gebiets " + str(self.umgebung.gebeBezeichnung())+ ") und kannst nicht weiter  " + bewegungsWort.gebeBezeichnung() + ".")
-                               
+                    self.uebergang = True                                 
             elif "kleineres" in self.grenzTest:
                 # Bewegung durchführen
                 if wort.gebeWortTyp() == WortTyp.Flaeche:
@@ -200,10 +225,18 @@ class Bewegung(object):
             self.süd(geschwindigkeit)
         elif "west" in self.eingabe  :
             self.west(geschwindigkeit)        
-        elif "hoch" in self.eingabe:
-            self.hoehe(geschwindigkeit)
-        elif "runter" in self.eingabe:
-            self.hoehe(- geschwindigkeit)
+        elif "hoch" in self.eingabe or "oben" in self.eingabe:
+            if "oben angestoßen" in self.umgebung.PruefeUntenUndOben(self.position):  
+                self.wonderText.ergaenzeText ("Du kannst hier nicht weiter nach oben " + wort.gebeBezeichnung() + "!")               
+                return True
+            else:
+                self.hoehe(geschwindigkeit)
+        elif "runter" in self.eingabe or "unten" in self.eingabe:
+            if "unten angestoßen" in self.umgebung.PruefeUntenUndOben(self.position):
+                self.wonderText.ergaenzeText ("Du kannst hier nicht weiter nach unten " + wort.gebeBezeichnung() + "!")  
+                return True              
+            else:
+                self.hoehe(- geschwindigkeit)            
         else:
             self.wonderText.druckeEingabeNichtErkannt(self.eingabe)
             return False
