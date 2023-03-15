@@ -15,7 +15,7 @@ class Spiel(object):
         self.wondertext = WonderText()
         self.wonderInventar = WonderInventar(self.wortVergleicher)
         self.umgebungen = UmgebungsGenerator(self.wortVergleicher)      
-        self.bewegung = Bewegung(self.umgebungen.gebeStartUmgebung(),self.wondertext)
+        self.bewegung = Bewegung(self.umgebungen.gebeStartUmgebung(),self.wondertext, self.wortVergleicher)
         self.umgebungen.gebeStartUmgebung().setzeBewegung(self.bewegung)
         self.DoktormutterPosition = self.umgebungen.gebeDoktormutterPosition()
         self.umgebung =  self.umgebungen.gebeStartUmgebung()

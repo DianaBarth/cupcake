@@ -72,19 +72,15 @@ class WortGeneratorFlaeche(object):
        
 class WortGeneratorEbene(object):
     def  __init__(self, wortTyp:WortTyp):
-        self.__initialisiereSchwimmen(wortTyp)
-        self.__initialisiereFliegen(wortTyp)
+        self.__initialisiereSchwimmen(wortTyp)       
        
     def gebeWorte(self):
-        return [ self.wortSchwimmen,  self.wortFliegen]
+        return [ self.wortSchwimmen]
     
     def __initialisiereSchwimmen(self, wortTyp:WortTyp):
          self.wortSchwimmen = Wort("schwimmen", wortTyp)
          self.wortSchwimmen.fuegeVarianteHinzu("schwimm", ["schwimmst"])
    
-    def __initialisiereFliegen(self, wortTyp:WortTyp):
-         self.wortFliegen = Wort("fliegen", wortTyp)
-         self.wortFliegen.fuegeVarianteHinzu("flieg", ["fliegst", "flatterst"])
        
 class WortGeneratorUebergang(object):
     def  __init__(self, wortTyp:WortTyp):
@@ -156,6 +152,7 @@ class WortGeneratoren(object):
         yield self.blumenpflegeWorte
         yield self.inventarWorte
         yield self.spielbeendenWorte
+        
 class WortVergleicher(object):
     def  __init__(self):
          self.wortGeneratoren = WortGeneratoren()

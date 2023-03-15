@@ -116,9 +116,11 @@ class Umgebung(object):
     def gebeUmgebungssatzFuerBlumen(self):
         return self.umgebungssatzFuerBlumen
 
-    def gebeuebergangsworte(self, uebergangstyp):
-        return self.uebergangsworte[uebergangstyp]
-    
+    def gebeUebergangsWort(self, uebergangstyp):
+        if self.uebergangsworte.__contains__(uebergangstyp) == True:
+            return self.uebergangsworte[uebergangstyp]
+        else:
+            return None
     def gebeUebergangssatz(self, vergleichsergebnis, uebergangstyp):
         if "offset" in vergleichsergebnis:
             return (self.uebergangssatzOffset[uebergangstyp])     
@@ -137,6 +139,14 @@ class Umgebung(object):
                     return umgebungswort
         return None
 
+    def PruefeUntenUndOben(self, userposition):
+        if userposition.gebeZ() == self.unten:
+            return "unten angestoßen"
+        elif userposition.gebeZ() == self.oben:
+            return "oben angestoßen"   
+        else:
+            return "kleineres"
+        
     def testeEndBegrenzung(self, userposition):
         if (userposition.gebeX() == self.endbegrenzung.gebeX()  and userposition.gebeY() == self.endbegrenzung.gebeY() ):
             return "genau nord-west oben" ## ecke
@@ -165,11 +175,7 @@ class Umgebung(object):
         elif userposition.gebeY() == - self.endbegrenzung.gebeY():
             return "genau süd"
         elif userposition.gebeY() == - self.endbegrenzung.gebeY() + self.offset:
-            return "offset süd"    
-        elif userposition.gebeZ() == self.unten:
-            return "unten angestoßen"
-        elif userposition.gebeZ() == self.oben:
-            return "oben angestoßen"   
+            return "offset süd"          
         else:
             return "kleineres" 
         
@@ -201,7 +207,7 @@ class Umgebung(object):
         elif userposition.gebeY() == - self.startbegrenzung.gebeY():
             return "genau nord"
         elif userposition.gebeY() == - self.startbegrenzung.gebeY() + self.offset:
-            return "offset nord"     
+            return "offset nord"         
         else:
             return "kleineres" 
         
@@ -216,8 +222,8 @@ class UmgebungsGenerator:
         self.__initialisiereUniUmgebung(wortvergleicher)
     
         self.startUmgebung.setzeUebergang("ende",
-            "Du stehst vor einem großen See. wenn Du willst, kannst Du jetzt ins Wasser springen und danach in alle Himmelsrichtunge und nach unten bzw. oben schwimmen.",
-            "Du siehst in der Nähe einen großen See. Wenn Du willst, kannst Du jetzt ins Wasser springen und  und danach in alle Himmelsrichtunge und nach unten bzw. oben schwimmen.",
+            "Du stehst vor einem großen See. wenn Du willst, kannst Du jetzt ins Wasser springen und danach in alle Himmelsrichtungen und nach unten bzw. oben schwimmen.",
+            "Du siehst in der Nähe einen großen See. Wenn Du willst, kannst Du jetzt ins Wasser springen und  und danach in alle Himmelsrichtungen und nach unten bzw. oben schwimmen.",
             "springen", -1, "gehen","schwimmen", 4, self.wasserUmgebung)  
         
         self.wasserUmgebung.setzeUebergang("start",
@@ -274,7 +280,7 @@ class UmgebungsGenerator:
     def __initialisiereWasserUmgebung(self,wortvergleicher):
         self.wasserUmgebung = Umgebung("wasser","aus dem Wasser",self.grenzPositionStartWasser, self.grenzPositionWasserWald,wortvergleicher,-8)
         self.wasserUmgebung.setzeGeschwindigkeit(self.wortvergleicher.gebeWort("schwimmen"),4)
-        self.wasserUmgebung.setzeUnterUndObereGrenze(-8,0)
+        self.wasserUmgebung.setzeUnterUndObereGrenze(-9,-1)
 
     def __initialisiereWaldUmgebung(self,wortvergleicher):
         self.waldUmgebung = Umgebung("wald","aus dem Wald", self.grenzPositionWasserWald,self.grenzPositionWaldUni,wortvergleicher,0)
